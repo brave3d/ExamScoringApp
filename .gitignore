@@ -1,7 +1,14 @@
 .vs/
 ExamScoringApp/obj
-ExamScoringApp/bin/
 packages/
 obj/
-
-
+ExamScoringApp/App_Start
+ExamScoringApp/Controllers
+ExamScoringApp/Helpers
+ExamScoringApp/Models
+ExamScoringApp/Properties
+ExamScoringApp/ExamScoringApp.csproj
+ExamScoringApp.sln
+ExamScoringApp/ExamScoringApp.csproj.user
+ExamScoringApp/Global.asax
+ExamScoringApp/Global.asax.cs
