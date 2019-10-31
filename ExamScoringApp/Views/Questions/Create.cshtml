@@ -179,9 +179,8 @@
             "points": points
         }
 
-
     $.ajax({
-            url: '/Questions/SaveQuestion',
+            url: '/ExamScoring/Questions/SaveQuestion',
             type: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
