@@ -1,0 +1,164 @@
+﻿@model ExamScoringApp.Models.Question
+@using ExamScoringApp.Models
+@using Newtonsoft.Json
+
+@using ExamScoringApp.Helpers
+
+@{
+    ViewBag.Title = "Details";
+    var exam = (Exam)ViewData["Exam"];
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Details</h2>
+        <ol class="breadcrumb">
+            <li>
+                @Html.ActionLink("List", "Index")
+            </li>
+            <li class="active">
+                <strong>Details</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Details Exams</h5>
+                </div>
+                <div class="ibox-content">
+
+
+                    <dl class="dl-horizontal">
+
+
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ExamId)
+                        </dt>
+
+                        <dd>
+
+                            @Html.DisplayFor(model => exam.Course)
+                        </dd>
+
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Text)
+                        </dt>
+
+                        <dd id="questionText">
+
+                            @Html.DisplayFor(model => model.Text)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Blanks)
+                        </dt>
+
+                        <dd id="displayBlanks" >
+
+                            @*@Html.DisplayFor(model => model.Year)*@
+                            @{
+                                var j = 0;
+                                var blankIndex = 0;
+                            }
+                            @foreach (var blank in Model.Blanks)
+                            {
+
+                                @Model.Text.Slice(blankIndex, blank.Index);
+                                <span class="highlight"> @Model.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length) </span>
+                                blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                            }
+                            @Model.Text.Slice(blankIndex, Model.Text.Length)
+                        </dd>
+
+
+                    </dl>
+
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                    }
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-white" })
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var blanks = JSON.parse('@JsonConvert.SerializeObject(Model.Blanks)'.replace(/&quot;/g,'"'));
+    console.log(blanks);
+
+    displyBlanks = [];
+    blanks.forEach(b => {
+        b.PossibleAnswers.forEach(c => {
+            displyBlanks.push({ "Index": b.Index, "Answer": c.AnswerTxt, "Score": c.Score })
+        });
+    });
+    displayBlanksAndAnswers();
+    //highlightQuestion();
+
+
+    function displayBlanksAndAnswers() {
+    questionTxt = '@Model.Text';
+    displyBlanks.forEach(b => {
+    document.getElementById('displayBlanks').innerHTML +=
+        ` <div class="blank">
+	<label> Answer  <input class="form-control" type="text" disabled="true" value="${b.Answer}"></label>
+	<label> Score   <input class="form-control"   type="number" value="${b.Score}" max="10" min="0" disabled="true" placeholder="score"></label>
+	<label> Index   <input class="form-control"   type="number" value="${b.Index}" placeholder="index" disabled="true"></label>
+	 </div>`
+    })
+
+    document.getSelection().removeAllRanges()
+    }
+    function highlightQuestion() {
+        document.getElementById('questionText').innerHTML = '';
+        result = ``;
+        var j = 0;
+        for (var i = 0; i < questionTxt.length; i++) {
+            if (i<blanks[j].Index) {
+                result += questionTxt[i];
+            }
+            if (i == blanks[j].Index) {
+               result += `<span class="highlight"> ${questionTxt[i]}`
+            }
+            if (i> blanks[j].Index && i< blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length ) {
+                  result += questionTxt[i];
+            }
+            if (i== blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length -1) {
+                result += ` </span>` + " ";
+                j++
+                if (blanks[j] == undefined) {
+                    j--;
+                }
+            }
+            if (i > blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length) {
+                result += questionTxt[i];
+            }
+
+        }
+         document.getElementById('questionText').innerHTML = result;
+    }
+
+</script>
+
+
+
+
+
+
+
+
+

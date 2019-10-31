@@ -1,0 +1,379 @@
+﻿@model ExamScoringApp.Models.Sentence
+@using Microsoft.AspNet.Identity;
+@using MongoDB.Bson;
+@using ExamScoringApp.Models;
+
+@{
+    ViewBag.Title = "Details";
+    var userId = User.Identity.GetUserId();
+    var userObjectId = new ObjectId(userId);
+    List<TaggedToken> userTokens = null;
+    bool readOnly = (bool)ViewBag.readOnly;
+
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Details</h2>
+        <ol class="breadcrumb">
+            <li>
+                @Html.ActionLink("List", "Index")
+            </li>
+            <li class="active">
+                <strong>Tag Sentence</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Tag Sentence</h5>
+                </div>
+                <div class="ibox-content">
+                    <p id="userId" class="hidden">@userId</p>
+                    
+
+                    @if (readOnly && !HttpContext.Current.User.IsInRole("Admin"))
+                    {
+                        var adminTokens = new List<TaggedToken>();
+                        <div class="tokenization">
+                            <h2>This sentence is readonly</h2>
+                            @{
+
+                                adminTokens = Model.Tokens?.FirstOrDefault(t => true)?.TaggedTokens;
+                                if (adminTokens == null)
+                                {
+                                    <h2>This sentence is not tagged by Admin</h2>
+                                }
+                            }
+                          
+                            <div class="dropzone-container">
+
+                          
+                                @if (adminTokens != null && adminTokens.Count > 0)
+                                {
+                                    foreach (var item in adminTokens.Select(t => t.Token))
+                                    {
+                                        <ul>
+                                            <li>@item</li>
+                                        </ul>
+                                    }
+                                }
+                             
+
+                            </div>
+                            <br />
+                          
+                            <button id="back" onclick="goBack(this)" class="btn btn-success" type="button" name="button"><i class="icon fa fa-chevron-left"></i> Back </button>
+                            @if (adminTokens != null)
+                            {
+                                /**/
+
+                                <button id="tokenize" onclick="tokenize(this)" class="btn btn-info" type="button" name="button"><i class="icon fa fa-chevron-right"></i> Next </button>
+                            }
+                          
+                        </div>
+                    }
+
+                                else
+                                {
+
+                        <div class="tokenization">
+
+                            <h2>Drag and drop the words to form tokens.</h2>
+                            <div class="dropzone-container">
+
+                                @if (Model.Tokens.Any(t => t.UserId == userObjectId))
+                                {
+                                    userTokens = Model.Tokens.FirstOrDefault(t => t.UserId == userObjectId).TaggedTokens;
+                                    for (int i = 0; i < userTokens.Count; i++)
+                                    {
+                                    <ul>
+                                        <li class="draggable" data-flag="@userTokens[i].Flag">
+                                            @userTokens[i].Token
+                                        </li>
+                                    </ul>
+
+                                      }
+
+
+                                }
+
+
+                                @*@foreach (var item in Model.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            <ul>
+                <li class="draggable">@item</li>
+            </ul>
+        }*@
+
+
+
+                            </div>
+
+
+                            <br />
+                            <button id="tokenize" onclick="tokenize(this)" class="btn btn-success" type="button" name="button"><i class="icon fa fa-chevron-right"></i> Next </button>
+
+                        </div>
+                                }
+
+
+                    <div class="lemma-tagging hidden">
+                        <form id="tagsForm">
+                            <table class="table table-striped" >
+                                <thead style="background: #3c927a;color: white;">
+                                <th>Token</th>
+                                <th style="width:200px">Lemma</th>
+                                @{
+                                        var Tags =new List<string> {"zamir", "sıfat", "sayı", "ünlem", "det", "zarf",
+        "yüzde", "fiil", "bağlaç", "postp", "isim", "ikili", "noktalama"};
+                                 }
+                                @foreach (var item in Tags)
+                                {
+                                    <th>@item</th>
+
+                                }
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <button id="tagsFormSubmit" onclick="FormSubmit(this);" class="btn btn-primary hidden" type="submit" name="buttons"><i class="icon fa fa-save"></i> Save </button>
+                        </form>
+                        <button id="save" onclick="save(this)" class="btn btn-primary" type="button" name="button"><i class="icon fa fa-save"></i> Save </button>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+ </div>
+
+
+<script src="~/Scripts/draggable/draggable.min.js"></script>
+<script src="~/Scripts/draggable/jquery.min.js"></script>
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script>
+    const Tags = ["PRON", "ADJ", "NUM", "INTERJ", "DET", "ADV",
+        "PERCENT", "VERB", "CONJ", "POSTP", "NOUN", "DUP", "PUNC"];
+    const droppable = new window.Draggable.Droppable(document.querySelectorAll(".dropzone-container"), {
+        draggable: ".draggable",
+        droppable: ".dropzone-container>ul"
+    });
+
+    droppable.on("droppable:over", function () {
+        $("ul").removeClass("draggable-droppable--occupied");
+    });
+    droppable.on("droppable:out", () => console.log("droppable:out"));
+
+    state = {};
+    state.currentRow = -1;
+    function tokenize(el) {
+        console.log(el, "clicked");
+        state.finaltokens = [];
+        state.flags = [];
+        tokens = document.querySelector('.dropzone-container')
+        litokens = Array.from(tokens.children).map(ul => ul.children).filter(li => li.length > 0); //23
+        flag = '';
+        litokens.forEach(li => {
+            acc = "";
+            Array.from(li).forEach(lii => {
+                acc = acc + lii.innerHTML.replace(/\r?\n|\r/g, "").trim() + " ";
+      
+            });
+          
+            
+            state.finaltokens.push(acc.substring(0, acc.length - 1));
+        })
+
+
+        litokens.forEach(li => {
+            acc = "";
+            if (li.length > 1) {
+                console.log('li.length', li.length);
+                state.flags.push('3#dummy')
+                return;
+            }
+            Array.from(li).forEach(lii => {
+                if (li.length <= 1)  {
+                    console.log(lii);
+                    flag = lii.getAttribute('data-flag')
+                }
+            });
+            state.flags.push(flag)
+        })
+        document.querySelector('.tokenization').classList.add('hidden');
+        state.finaltokens.forEach(t => {
+            createRow(t, t, Tags)
+        })
+        document.querySelector('.lemma-tagging').classList.remove('hidden')
+
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+    function FormSubmit(el){
+        event.preventDefault();
+        //$('#tagsForm').submit();
+        console.log('tagsFormSubmit click');
+        return false;
+    }
+
+    function save(el) {
+        func = this;
+        if (! $('#tagsForm')[0].checkValidity()) {
+            $('#tagsFormSubmit').click();
+            return;
+        }
+        //var optionslist = Array.from(document.querySelectorAll('select'))
+        //state.tags = optionslist.map(ol => ol.options[ol.options.selectedIndex].innerHTML.trim())
+
+
+
+
+        var lemmasList = Array.from(document.querySelectorAll('textarea.lemma'))
+        state.lemmas = lemmasList.map(l => l.value)
+
+        var optionslist = Array.from(document.querySelectorAll('a.selectedTag'))
+        state.tags = optionslist.map(ol => ol.innerHTML.trim())
+        if (state.tags.length < state.finaltokens.length) {
+            //alert("Please select the equivalent tags for the given tokens");
+            //return;
+
+            swal({ title: "Error!", text: "Please select the equivalent tags for the given tokens",icon: "error"})
+                    .then((value) => {
+                });
+            return;
+
+        }
+        state.userId = document.querySelector('#userId').innerText;
+        var sentenceId = '@Model.Id';
+        console.log(sentenceId);
+
+        var token = {};
+        token.UserId = state.userId;
+        token.TaggedTokens = [];
+        for (var i = 0; i < state.tags.length; i++) {
+            token.TaggedTokens.push({
+                "Token": state.finaltokens[i],
+                "Lemma": state.lemmas[i],
+                "Tag": state.tags[i],
+                "Flag": state.flags[i],
+                
+            });
+        };
+
+        data = {
+            "sentenceId": sentenceId,
+            "userId": state.userId,
+            "token": token,
+        }
+
+        $.ajax({
+            url: '/Sentences/SaveTags',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                //alert();
+                if (response.success)
+                    advAlert("Good job!", response.responseText, "success")
+                else
+                    advAlert("Error!", response.responseText, "error")
+            },
+            error: function () {
+                advAlert("Error!", "Try again later", "error")
+            }
+        });
+
+    }
+
+    function advAlert(title, text, type) {
+            swal(title, text, type)
+                    .then((value) => {
+                       window.location.href = window.location.origin+ "/Sentences/SentencesList/" + '@Model.Text_ID';
+                    });
+    }
+
+    function createRow(token, lemma, tags)
+    {
+
+
+        lemma = lemma.trim().replace(/\s\s+/g, ' ');
+         var row = `<tr>
+	        <td>
+		        ` + token +`
+	        </td>
+	        <td>
+		        <textarea rows="2" style="max-width:300px;" required class="form-control lemma" type="text" placeholder="lemma" name="">` + lemma + `</textarea>
+	        </td>
+		        ` + buttonList(tags) + `
+        </tr>`
+
+
+
+         //   < td >
+         //   <select required name="tag" class="form-control chzn-select " tabindex="0" >
+         //       <option value="">...</option>
+         //       `+selectList(tags)+`
+		    // </select>
+	       //</td >
+        document.querySelector('.table').tBodies[0].innerHTML += row
+    }
+
+    function buttonList(list) {
+        result = ``;
+        i = 0;
+        state.currentRow++;
+
+        list.forEach(item => {
+            result = result + `<td><a class="tags"  onclick =selcetTag(this) data-row="` + state.currentRow + `" data-col="` + i  + `">`+item +`  </a></td>`
+            i++;
+
+        })
+
+
+
+
+        return result;
+
+    }
+
+    function selcetTag(el) {
+        row = el.attributes["data-row"].value
+        col = el.attributes["data-col"].value
+        rowTags = document.querySelectorAll('a.tags[data-row="' + row + '"]')
+        rowTags.forEach(rt => { rt.classList.remove("selectedTag") })
+        //state.el=el
+        //console.log(el);
+        el.classList.add("selectedTag");
+
+    }
+    function selectList(options) {
+         result = ``;
+         i= 0;
+        options.forEach( item=>
+        {
+            i++;
+            result = result + `<option value="`+i+`">
+	        `+item+`
+        </option>`
+        })
+
+        return result;
+
+    }
+</script>
+
+
+
+
+
+
+

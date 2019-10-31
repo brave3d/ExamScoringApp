@@ -1,0 +1,74 @@
+@using ExamScoringApp.Models.Upload
+@model string
+@helper DeleteFile(string name, Guid id)
+{
+    var dicName = string.Format("{0}_DeleteFile[{1}]", name, id);
+    @*<label class="label-checkbox">
+            <input name="@dicName" type="checkbox">
+            <span class="custom-checkbox"></span>
+        </label>*@
+    <a href="#" class="deletefile" name="@dicName"><i class="fa fa-remove"></i></a>
+}
+
+
+@{
+    var metadata = ViewData.ModelMetadata;
+    var name = ViewData.TemplateInfo.GetFullHtmlFieldName("");
+    var id = ViewData.TemplateInfo.GetFullHtmlFieldId("");
+
+   // var uploadAtt = metadata.Get<UploadAttribute>();
+    
+    var multiple = false ? "multiple" : "";
+    var accept = "accept=" + "";
+    var displayHint = (string)metadata.AdditionalValues["DisplayHint"];
+
+    var assets = Model.ToAssets();
+
+    var viewData = new ViewDataDictionary { { "MetaData", metadata } };
+}
+@if (assets.Any())
+{
+    <ul class="list-unstyled">
+        @foreach (var asset in assets)
+        {
+            <li class="file">
+                @DeleteFile(name, asset.Id)
+                @Html.Partial("DisplayTemplates/Thumbnail/" + displayHint, asset, viewData)
+                @asset.Title
+
+            </li>
+        }
+    </ul>
+}
+    @*@if ((bool)metadata.AdditionalValues["IsMultiple"] || !assets.Any()){}*@
+    <input type="file" name="@name" id="@id" @multiple @accept class="form-control" >
+
+
+    <input type="hidden" name="@name" value="@Model" />
+
+    @if (HttpContext.Current.Items["UploadEditorTemplate"] == null)
+    {
+        HttpContext.Current.Items["UploadEditorTemplate"] = true;
+        <style>
+            .deleting {
+                -ms-opacity: 0.3;
+                opacity: 0.3;
+            }
+        </style>
+        <script type="text/javascript">
+            $('form').has('input[type="file"]').attr('enctype', 'multipart/form-data');
+            $(document).on('click','a.deletefile', function (event) {
+                event.preventDefault();
+                var a = $(this);
+                var li = a.parents('li.file');
+                if (li.hasClass('deleting')) {
+                    li.removeClass('deleting');
+                    $('input[name="' + a.attr('name') + '"]').remove();
+                } else {
+                    li.addClass('deleting');
+                    li.append('<input type="hidden" value="true" name="' + a.attr('name') + '" />');
+                }
+
+            });
+        </script>
+    }

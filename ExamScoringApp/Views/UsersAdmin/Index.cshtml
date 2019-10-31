@@ -1,0 +1,91 @@
+@model IEnumerable<ExamScoringApp.Models.ApplicationUser>
+
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Index</h2>
+        <ol class="breadcrumb">
+            <li class="active">
+                <strong>Users</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>List of Users</h5>
+                    <div class="ibox-tools">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
+                        }
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+
+                    <table class="table">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UserName)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.StudentNo)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.StudentName)
+                            </th>
+
+                            <th>
+
+                            </th>
+                        </tr>
+
+            @foreach (var item in Model)
+            {
+                 <tr>
+                     <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+
+                     <td>
+                         @Html.DisplayFor(modelItem => item.StudentNo)
+                     </td>
+
+                     <td>
+                         @Html.DisplayFor(modelItem => item.StudentName)
+                     </td>
+
+
+                     <td>
+                         @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                         @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                         @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                     
+                         @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-xs" })
+                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })
+                         @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
+                     </td>
+                 </tr>
+            }
+
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

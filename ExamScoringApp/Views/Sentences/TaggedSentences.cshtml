@@ -1,0 +1,122 @@
+﻿
+@model IEnumerable<ExamScoringApp.Models.SentenceVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Index</h2>
+        <ol class="breadcrumb">
+            <li class="active">
+                <strong>Sentences</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Sentences</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <table id="table" class="table table-striped">
+                        <tr>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Text)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Text_ID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TaggedByAdmin)
+                            </th>
+                            @if (!HttpContext.Current.User.IsInRole("Admin"))
+                            {
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TaggedByMe)
+                                </th>
+                            }
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Text)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Text_ID)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TaggedByAdmin)
+                                </td>
+                                @if (!HttpContext.Current.User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TaggedByMe)
+                                    </td>
+                                }
+
+                                <td>
+                                    @Html.ActionLink("Etiketle", "TagSentence", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
+                                </td>
+
+                                <td>
+                                    @Html.ActionLink("Etiketle Güncelle", "EditTag", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
+                                </td>
+
+
+
+                                @if (item.TaggedByAdmin && HttpContext.Current.User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        @Html.ActionLink("Admin Etiketleri", "AdminTags", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+                                    </td>
+                                }
+
+
+                                @if (item.TaggedByMe && !HttpContext.Current.User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        @Html.ActionLink("Benim Etiketleri", "MyTags", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+                                    </td>
+                                }
+
+
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

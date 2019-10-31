@@ -1,0 +1,183 @@
+﻿@model ExamScoringApp.Models.ExamVM
+@using ExamScoringApp.Models
+@using Microsoft.AspNet.Identity;
+@using ExamScoringApp.Helpers
+@{
+    ViewBag.Title = "DoExam";
+    var userId = User.Identity.GetUserId();
+    var Exams = (List<Exam>)ViewData["Exams"];
+
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2> @Model.Exam.Course  Exam</h2>
+        <ol class="breadcrumb">
+            <li>
+                @*@Html.ActionLink("List", "Index")*@
+            </li>
+           
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="title-action">
+            @*@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })*@
+        </div>
+    </div>
+</div>
+
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Fill in the Blanks for the following Questions</h5>
+
+                </div>
+                <div class="ibox-content">
+
+                    <p>Fill in the Blanks for the following Questions : </p>
+
+
+                    @{ int index = 1;}
+                    <ol>
+                        @foreach (var question in Model.Questions)
+                        {
+                        <li class="m-b-lg">
+                            @{
+                                index++;
+                                var j = 0;
+                                var blankIndex = 0;
+                            }
+
+                            @foreach (var blank in question.Blanks)
+                            {
+                                @question.Text.Slice(blankIndex, blank.Index);
+                                <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
+                                blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                            }
+                            @question.Text.Slice(blankIndex, question.Text.Length)
+
+                            @*@for (var i = 0; i < question.Text.Length; i++)
+                            {
+                                if (i < question.Blanks[j].Index)
+                                {
+                                    @question.Text[i];
+                                }
+                                if (i == question.Blanks[j].Index)
+                                {
+                                    <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
+                                }
+                                if (i > question.Blanks[j].Index && i < question.Blanks[j].Index + question.Blanks[j].PossibleAnswers[0].AnswerTxt.Length)
+                                {
+                                    continue;
+                                }
+
+                                if (i == question.Blanks[j].Index + question.Blanks[j].PossibleAnswers[0].AnswerTxt.Length - 1)
+                                {
+                                    j++;
+                                    if (question.Blanks[j] != null)
+                                    {
+                                        j--;
+                                    }
+                                }
+
+                                if (i > question.Blanks[j].Index + question.Blanks[j].PossibleAnswers[0].AnswerTxt.Length)
+                                {
+                                    @question.Text[i];
+                                }
+
+                            }*@
+                        </li>
+                }
+                        </ol>
+                        <button type="button" onclick="save()" class="btn btn-primary"> Save </button>
+                        @*<button type="button" onclick="reset()" class="btn btn-warning"> Reset </button>
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white" })*@
+
+
+                    </div>
+                    </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="~/Content/js/rangy-core.min.js"></script>
+<script src="~/Content/js/rangy-classapplier.js"></script>
+<script src="~/Content/js/rangy-highlighter.js"></script>
+
+<script src="~/Scripts/draggable/jquery.min.js"></script>
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script src="~/Content/js/lodash.min.js"></script>
+<script>
+
+    //var questionText = "";
+    //$("#Text").on('input', (e) => {
+    //    //console.log("event triggered", e.target.value);
+    //    $('#question').html(e.target.value);
+    //    questionText = e.target.value;
+    //});
+
+
+    function save() {
+    var blanks = [];
+    var examId = $('#exams-select').find(":selected").attr('data-id');
+    BlanksArr = Array.from(document.getElementsByClassName('blank'));
+    BlanksArr.forEach(b => blanks.push(
+        {
+            "AnswerTxt": b.children[0].children[0].value,
+            "Score": b.children[1].children[0].value,
+            "Index": b.children[2].children[0].value,
+        }));
+        console.log(blanks);
+        const groupedBlanks = _.groupBy(blanks, b => b.Index);
+        const finalBlanks = [];
+        Object.entries(groupedBlanks).forEach(e => { finalBlanks.push({ "Index": e[0], "PossibleAnswers": e[1] }) })
+
+        //console.log(groupedBlanks);
+        //console.log(finalBlanks);
+
+        data = {
+            "examId": examId,
+            "text": questionText,
+            "blanks": finalBlanks,
+        }
+
+
+    $.ajax({
+            url: '/Questions/SaveQuestion',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                //alert();
+                if (response.success)
+                    advAlert("Success!", response.responseText, "success")
+                else
+                    advAlert("Error!", response.responseText, "error")
+            },
+            error: function () {
+                advAlert("Error!", "Try again later", "error")
+            }
+        });
+
+        }
+
+   function advAlert(title, text, type) {
+       swal(title, text, type).then((value) => {
+           if (type == "success") { window.location.href = window.location.origin + "/Questions/Index/";}
+
+       });
+    }
+
+
+
+</script>

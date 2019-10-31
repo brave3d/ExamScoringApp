@@ -1,0 +1,14 @@
+.chosen-rtl.chosen-container-single-nosearch .chosen-search, .chosen-rtl .chosen-drop {
+    left: auto;
+    right: 9999px;
+}
+.chosen-container.chosen-with-drop .chosen-drop {
+    left: auto;
+    right: 0;
+    /* height: 132px; */
+    /* overflow-y: scroll; */
+}
+.chosen-container .chosen-drop {
+    left: auto;
+    right: -9999px;
+}

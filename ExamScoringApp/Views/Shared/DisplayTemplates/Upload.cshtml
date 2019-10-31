@@ -1,0 +1,23 @@
+@using ExamScoringApp.Models.Upload
+@model string
+@{
+    var metadata = ViewData.ModelMetadata;
+    var displayHint = (string)metadata.AdditionalValues["DisplayHint"];
+    var uploadAtt = (UploadAttribute)metadata.AdditionalValues["Upload"];
+    var assets = Model.ToAssets();
+}
+@if (assets.Any())
+{
+    foreach (var asset in assets)
+    {
+        @Html.Partial("DisplayTemplates/" + displayHint, asset, new ViewDataDictionary { { "ParentModelMetadata", metadata }, { "ParentViewData", ViewData } })
+        if (uploadAtt.DisplayBehaviuor == DisplayBehaviuor.OnlyFirst)
+        {
+            break;
+        }
+    }
+}
+else
+{
+    <p>No files uploaded</p>
+}
