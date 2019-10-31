@@ -90,10 +90,10 @@
                     </dl>
 
 
-                    @if (User.IsInRole("Admin"))
+                    @*@if (User.IsInRole("Admin"))
                     {
                         @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
-                    }
+                    }*@
                     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-white" })
 
 
