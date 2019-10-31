@@ -7611,7 +7611,7 @@ article {
     /* padding-bottom: 31px; */
     min-height: 80px;
     padding: 10px 20px;
-    padding-left: 210px;
+    padding-left: 192px;
     /* overflow-y: scroll; */
 }
 
@@ -7662,7 +7662,8 @@ h3 {
 
 #question{
   margin-top:-10px;
- 
+  line-height: 1.8;
+  font-size: 18px;
 }
 #blanks{
   padding-left:200px
@@ -7671,10 +7672,66 @@ h3 {
       display: inline-block;
     width: auto;
 }
-.blank-input{border-style: dashed;break-after: avoid;border: none;border-bottom: 1px solid #999;text-align: center;width: 10em;transition: width 300ms ease;padding: 5px;height: 29px;}
+.blank-input{border-style: dashed;break-after: avoid;border: none;border-bottom: 1px dashed #999;text-align: center;width: 10em;transition: width 300ms ease;padding: 5px;height: 20px;font-weight: bold;/* color: #fd3737; */font-size: 13px;background: #fbfbfb;}
 
 .blank-input:focus {
     outline: none;
-    max-width: 20em;
+    /* max-width: 20em; */
     width: 15em;
+}
+.question-text{
+  /* line-height: 2.5; */
+  /* font-family: times; */
+  /* font-size: 16px; */
+  border: 1px solid #e0e0e0;
+  background: #fbfbfb;
+  padding: 20px 15px;
+  border-radius: 7px;
+  /* display: flex; */
+}
+.points{
+  font-size: 9px;
+  width: 78px;
+  background: #e4e4e4;
+  height: 26px;
+  border-radius: 20px;
+  padding: 7px 10px;
+  text-align: center;
+  margin-top: -2px;
+  align-self: center;
+}
+.q-cont {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.q-text{
+width: 90%;
+line-height: 2.5;
+/* font-size: 14px; */
+align-self: center;
+}
+
+.swal-button:not([disabled]):hover {
+    background-color: #1ec1a0;
+}
+.swal-button {
+    background-color: #1ab394;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    margin: 0;
+    cursor: pointer;
+}
+.swal-button--cancel {
+    color: #555;
+    background-color: #efefef;
+}
+
+.swal-button--cancel:not([disabled]):hover {
+    background-color: #e7e7e7;
 }

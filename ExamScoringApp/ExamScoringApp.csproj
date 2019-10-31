@@ -486,16 +486,9 @@
     <Content Include="Views\Texts\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Text.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ObjectId.cshtml" />
-    <Content Include="Views\Sentences\Index.cshtml" />
-    <Content Include="Views\Sentences\SentencesList.cshtml" />
-    <Content Include="Views\Sentences\TagSentence.cshtml" />
     <Content Include="Views\StudentsPoints\Index.cshtml" />
-    <Content Include="Views\Sentences\AdminTags.cshtml" />
-    <Content Include="Views\Sentences\MyTags.cshtml" />
     <Content Include="Views\StudentsPoints\StudentsSentencesPoints.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Points.cshtml" />
-    <Content Include="Views\Sentences\EditTag.cshtml" />
-    <Content Include="Views\Sentences\TaggedSentences.cshtml" />
     <Content Include="Views\Exams\Create.cshtml" />
     <Content Include="Views\Exams\Delete.cshtml" />
     <Content Include="Views\Exams\Details.cshtml" />

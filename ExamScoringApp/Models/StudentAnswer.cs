@@ -15,6 +15,6 @@ namespace ExamScoringApp.Models
         public string AnswerTxt { get; set; }
 
         [BsonElement("Score")]
-        public int Score { get; set; }
+        public double Score { get; set; }
     }
 }

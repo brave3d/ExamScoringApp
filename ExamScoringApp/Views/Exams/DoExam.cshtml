@@ -42,26 +42,36 @@
 
 
                     @{ int index = 1;}
-                    <ol>
-                        @foreach (var question in Model.Questions)
-                        {
-                        <li class="m-b-lg question-text">
-                            @{
-                                index++;
-                                var j = 0;
-                                var blankIndex = 0;
-                            }
+                <ol style="padding:0 15px">
+                    @foreach (var question in Model.Questions)
+                    {
 
-                            @foreach (var blank in question.Blanks)
-                            {
-                                @question.Text.Slice(blankIndex, blank.Index);
-                                <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
-                                blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
-                            }
-                            @question.Text.Slice(blankIndex, question.Text.Length)
+                        <li class="m-b-lg question-text">
+                            <div  class="q-cont">
+                                <div class="q-text">
+                                    @{
+                                        index++;
+                                        var j = 0;
+                                        var blankIndex = 0;
+                                    }
+                                    @foreach (var blank in question.Blanks)
+                                    {
+                                        @question.Text.Slice(blankIndex, blank.Index);
+                                        <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
+                                        blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                                    }
+                                    @question.Text.Slice(blankIndex, question.Text.Length)
+                                </div>
+
+
+                                <div class="points">
+                                    @question.Points Points
+                                </div>
+                            </div>
                         </li>
-                         }
-                        </ol>
+
+                    }
+                </ol>
                         <button type="button" onclick="save()" class="btn btn-primary"> Save </button>
                         @*<button type="button" onclick="reset()" class="btn btn-warning"> Reset </button>*@
                          @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white" })
@@ -99,7 +109,7 @@
 
     function save() {
         var qAnswers = [];
-        var questions = Array.from(document.getElementsByClassName('question-text'))
+        var questions = Array.from(document.getElementsByClassName('q-text'))
         questions.forEach(q => {
             var childs = Array.from(q.children);
             var values = childs.map(c => c.value);

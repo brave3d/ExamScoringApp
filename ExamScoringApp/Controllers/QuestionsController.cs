@@ -52,7 +52,7 @@ namespace ExamScoringApp.Controllers
 
 
         //[HttpPost]
-        public async Task<ActionResult> SaveQuestion(string examId, string text, List<Blank> blanks)
+        public async Task<ActionResult> SaveQuestion(string examId, string text, List<Blank> blanks,int points)
         {
             var Id = new ObjectId();
             if (string.IsNullOrEmpty(examId) || !ObjectId.TryParse(examId, out Id))
@@ -82,6 +82,7 @@ namespace ExamScoringApp.Controllers
                 Text = text,
                 Blanks = blanks,
                 ExamId = Id,
+                Points = points
             };
             await Db.Questions.InsertOneAsync(q);
             return Json(new { success = true, responseText = "Question Saved!" }, JsonRequestBehavior.AllowGet);

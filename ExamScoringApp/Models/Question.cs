@@ -25,7 +25,9 @@ namespace ExamScoringApp.Models
         [BsonElement("Blanks")]
         public List<Blank> Blanks { get; set; }
 
-      
+        [BsonElement("Points")]
+        public int Points { get; set; }
+
 
     }
 

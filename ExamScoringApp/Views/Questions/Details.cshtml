@@ -46,6 +46,14 @@
                             @Html.DisplayFor(model => exam.Course)
                         </dd>
 
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Points)
+                        </dt>
+
+                        <dd id="questionText">
+
+                            @Html.DisplayFor(model => model.Points)
+                        </dd>
 
                         <dt>
                             @Html.DisplayNameFor(model => model.Text)
@@ -56,11 +64,12 @@
                             @Html.DisplayFor(model => model.Text)
                         </dd>
 
+
                         <dt>
                             @Html.DisplayNameFor(model => model.Blanks)
                         </dt>
 
-                        <dd id="displayBlanks" >
+                        <dd id="displayBlanks">
 
                             @*@Html.DisplayFor(model => model.Year)*@
                             @{
