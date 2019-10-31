@@ -7,142 +7,144 @@
  <div class="wrapper wrapper-content animated fadeInRight">
      <div class="row">
 
-         <div class="col-lg-3">
-             <div class="ibox ">
-                 <div class="ibox-title navy-bg ">
-                     <h5>Students</h5>
-                 </div>
-                 <div class="ibox-content">
-                     <h1 class="no-margins">@Model.Students</h1>
-                     <div class="stat-percent font-bold text-success"><i class="fa fa-users"></i></div>
-                     <small>Total Students</small>
-                 </div>
-             </div>
-         </div>
-
-         <div class="col-lg-3">
-             <div class="ibox ">
-                 <div class="ibox-title navy-bg ">
-                     <h5>Teachers</h5>
-                 </div>
-                 <div class="ibox-content">
-                     <h1 class="no-margins">@Model.Teachers </h1>
-                     <div class="stat-percent font-bold text-success"><i class="fa fa-file-text"></i></div>
-                     <small>Total Teachers</small>
+         @if (User.IsInRole("Admin"))
+         {
+             <div class="col-lg-3">
+                 <div class="ibox ">
+                     <div class="ibox-title navy-bg ">
+                         <h5>Students</h5>
+                     </div>
+                     <div class="ibox-content">
+                         <h1 class="no-margins">@Model.Students</h1>
+                         <div class="stat-percent font-bold text-success"><i class="fa fa-users"></i></div>
+                         <small>Total Students</small>
+                     </div>
                  </div>
              </div>
-         </div>
 
-
-
-
-         <div class="col-lg-3">
-             <div class="ibox ">
-                 <div class="ibox-title navy-bg">
-                     <h5>Questions</h5>
-                 </div>
-                 <div class="ibox-content">
-                     <h1 class="no-margins">@Model.Questions</h1>
-                     <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
-                     <small>Total Questions</small>
+             <div class="col-lg-3">
+                 <div class="ibox ">
+                     <div class="ibox-title navy-bg ">
+                         <h5>Teachers</h5>
+                     </div>
+                     <div class="ibox-content">
+                         <h1 class="no-margins">@Model.Teachers </h1>
+                         <div class="stat-percent font-bold text-success"><i class="fa fa-file-text"></i></div>
+                         <small>Total Teachers</small>
+                     </div>
                  </div>
              </div>
-         </div>
-
-
-         <div class="col-lg-3">
-             <div class="ibox ">
-                 <div class="ibox-title navy-bg">
-                     <h5>Answers</h5>
-                 </div>
-                 <div class="ibox-content">
-                     <h1 class="no-margins">@Model.Answers</h1>
-                     <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
-                     <small>Total Answers</small>
-                 </div>
-             </div>
-         </div>
 
 
 
-         <div class="col-lg-3">
-             <div class="ibox ">
-                 <div class="ibox-title navy-bg">
-                     <h5>Exams</h5>
-                 </div>
-                 <div class="ibox-content">
-                     <h1 class="no-margins">@Model.Exams</h1>
-                     <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
-                     <small>Total Exams</small>
+
+             <div class="col-lg-3">
+                 <div class="ibox ">
+                     <div class="ibox-title navy-bg">
+                         <h5>Questions</h5>
+                     </div>
+                     <div class="ibox-content">
+                         <h1 class="no-margins">@Model.Questions</h1>
+                         <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
+                         <small>Total Questions</small>
+                     </div>
                  </div>
              </div>
-         </div>
+
+
+             <div class="col-lg-3">
+                 <div class="ibox ">
+                     <div class="ibox-title navy-bg">
+                         <h5>Answers</h5>
+                     </div>
+                     <div class="ibox-content">
+                         <h1 class="no-margins">@Model.Answers</h1>
+                         <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
+                         <small>Total Answers</small>
+                     </div>
+                 </div>
+             </div>
 
 
 
+             <div class="col-lg-3">
+                 <div class="ibox ">
+                     <div class="ibox-title navy-bg">
+                         <h5>Exams</h5>
+                     </div>
+                     <div class="ibox-content">
+                         <h1 class="no-margins">@Model.Exams</h1>
+                         <div class="stat-percent font-bold text-success"><i class="fa fa-quote-right"></i></div>
+                         <small>Total Exams</small>
+                     </div>
+                 </div>
+             </div>
 
-         @*<div class="col-lg-3">
-            <div class="ibox ">
-                <div class="ibox-title ">
-                    <h5>Tokens</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins">@Model.Tokens</h1>
-                    <div class="stat-percent font-bold text-success"><i class="fa fa-ellipsis-h"></i></div>
-                    <small>Total Tokens</small>
-                </div>
-            </div>
-        </div>
-
-
-
+         }
 
 
-
-        <div class="col-lg-3">
-            <div class="ibox ">
-                <div class="ibox-title  white-bg">
-                    <h5>Tags</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins">@Model.Tags</h1>
-                    <div class="stat-percent font-bold text-success"><i class="fa fa-tags"></i></div>
-                    <small>Total Students</small>
-                </div>
-            </div>
-        </div>*@
-
-
-         @*<div class="col-lg-6">
-            <div class="widget style1 navy-bg" style="">
-                <div class="row">
-                    <div class="col-xs-4">
-                        <i class="fa fa-users fa-5x"></i>
+             @*<div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title ">
+                        <h5>Tokens</h5>
                     </div>
-                    <div class="col-xs-8 text-right">
-                        <span> Students </span>
-
-                        <h2 class="font-bold">@Model.Students</h2>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@Model.Tokens</h1>
+                        <div class="stat-percent font-bold text-success"><i class="fa fa-ellipsis-h"></i></div>
+                        <small>Total Tokens</small>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-6">
-            <div class="widget style1 ">
-                <div class="row">
-                    <div class="col-xs-4 text-center">
-                        <i class="fa fa-file-text fa-5x"></i>
+
+
+
+
+
+            <div class="col-lg-3">
+                <div class="ibox ">
+                    <div class="ibox-title  white-bg">
+                        <h5>Tags</h5>
                     </div>
-                    <div class="col-xs-8 text-right">
-                        <span> Total Texts </span>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@Model.Tags</h1>
+                        <div class="stat-percent font-bold text-success"><i class="fa fa-tags"></i></div>
+                        <small>Total Students</small>
+                    </div>
+                </div>
+            </div>*@
 
-                        <h2 class="font-bold">@Model.Texts</h2>
+
+             @*<div class="col-lg-6">
+                <div class="widget style1 navy-bg" style="">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-users fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Students </span>
+
+                            <h2 class="font-bold">@Model.Students</h2>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>*@
-     </div>
+
+            <div class="col-lg-6">
+                <div class="widget style1 ">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-file-text fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Total Texts </span>
+
+                            <h2 class="font-bold">@Model.Texts</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+         </div>
     
      
      @*<div class="row">

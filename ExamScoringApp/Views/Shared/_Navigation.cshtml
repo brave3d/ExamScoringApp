@@ -44,15 +44,16 @@
                 <a href="@Url.Action("Index", "Exams")"><i class="fa fa-paperclip"></i> <span class="nav-label">Exams</span></a>
             </li>
 
-            <li class="@Html.IsSelected(action: "Index", controller: "Questions")">
-                <a href="@Url.Action("Index", "Questions")"><i class="fa fa-question"></i> <span class="nav-label">Questions</span></a>
-            </li>
+
 
             @if (User.IsInRole("Admin"))
             {
                 @*<li class="@Html.IsSelected(action: "Index", controller: "Categories")">
                 <a href="@Url.Action("Index", "Categories")"><i class="fa fa-star"></i> <span class="nav-label">Categories</span></a>
             </li>*@
+                <li class="@Html.IsSelected(action: "Index", controller: "Questions")">
+                    <a href="@Url.Action("Index", "Questions")"><i class="fa fa-question"></i> <span class="nav-label">Questions</span></a>
+                </li>
 
                 <li class="@Html.IsSelected(action: "Index", controller: "UsersAdmin")">
                     <a href="@Url.Action("Index", "UsersAdmin")"><i class="fa fa-group"></i> <span class="nav-label">Users</span></a>

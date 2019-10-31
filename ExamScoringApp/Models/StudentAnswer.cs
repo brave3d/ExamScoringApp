@@ -12,7 +12,7 @@ namespace ExamScoringApp.Models
         public ObjectId StudentId { get; set; }
 
         [BsonElement("AnswerTxt")]
-        public ObjectId AnswerTxt { get; set; }
+        public string AnswerTxt { get; set; }
 
         [BsonElement("Score")]
         public int Score { get; set; }

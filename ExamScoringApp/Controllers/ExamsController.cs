@@ -23,20 +23,15 @@ namespace ExamScoringApp.Controllers
         public async Task<ActionResult> Index()
         {
             var exams = await Db.Exams.Find(s => true).ToListAsync();
-            //var examVms = new List<Exam>();
-            //foreach (var item in exams)
-            //{
-            //    examVms.Add(new TextVM
-            //    {
-            //        Id = item.Id,
-            //        IsTagged = await Tagged(item),
-            //        ReadOnly = item.ReadOnly,
-            //        Source = item.Source,
-            //        Txt = item.Txt
-            //    });
-            //}
-
-            return View(exams);
+            var examsVMs = new List<ExamVM>();
+            foreach (var item in exams)
+            {
+                examsVMs.Add(new ExamVM {
+                Exam = item,
+                Questions = Db.Questions.Find(q => q.ExamId.Equals(item.Id)).ToList()
+            });
+            }
+            return View(examsVMs);
         }
 
 
@@ -55,8 +50,97 @@ namespace ExamScoringApp.Controllers
             return View(examVM);
         }
 
+        //[HttpPost]
+        public async Task<ActionResult> SaveAnswers(string examId, List<List<string>> answers)
+        {
+            var Id = new ObjectId();
+            if (string.IsNullOrEmpty(examId) || !ObjectId.TryParse(examId, out Id))
+            {
+                return Json(new { success = false, responseText = "Please select an exam." }, JsonRequestBehavior.AllowGet);
+            }
+            var result = await Db.Exams.Find(t => t.Id == Id).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return Json(new { success = false, responseText = "Exam not found, try again later." }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (answers.Any(aa=>aa.Any(b=>String.IsNullOrEmpty(b))))
+            {
+                return Json(new { success = false, responseText = "Please Fill all the blanks!" }, JsonRequestBehavior.AllowGet);
+            }
+        
+
+            var questions = Db.Questions.Find(q => q.ExamId == new ObjectId(examId)).ToList();
+            //if (AlreadyAnswered(User.Identity.GetUserId(), questions))
+            //{
+            //    return Json(new { success = false, responseText = "You've already answered the questions" }, JsonRequestBehavior.AllowGet);
+            //}
+
+            if (answers.Count != questions.Count)
+            {
+                return Json(new { success = false, responseText = "Please fill all the blanks" }, JsonRequestBehavior.AllowGet);
+            }
+            int i = 0, j = 0;
+            var a = answers[i][j];
+            //foreach (var u in questions)
+            //{
+            //    foreach (var b in u.Blanks)
+            //    {
+            //        if (b.StudentAnswers == null)
+            //        {
+            //            b.StudentAnswers = new List<StudentAnswer>();
+            //        }
+            //        b.StudentAnswers.Add(new StudentAnswer
+            //        {
+            //            StudentId = new ObjectId(User.Identity.GetUserId()),
+            //            AnswerTxt = answers[i][j],
+            //            Score = 0 //CalculateStudentScore(b,answers[i][j])
+            //        });
+            //        j++;
+            //    }
+            //    j = 0;
+            //    i++;
+            //    Db.Questions.ReplaceOne(t => t.Id.Equals(u.Id), u, new UpdateOptions { IsUpsert = true });
+
+            //}
+            questions.ForEach(u =>{
+                u.Blanks.ForEach(b =>{
+                    if (b.StudentAnswers == null) b.StudentAnswers = new List<StudentAnswer>();
+                    b.StudentAnswers.Add(new StudentAnswer
+                    {
+                        StudentId = new ObjectId(User.Identity.GetUserId()),
+                        AnswerTxt = answers[i][j],
+                        Score = CalculateStudentScore(b, answers[i][j])
+                    });
+                    j++;
+                });
+                j = 0;
+                i++;
+                Db.Questions.ReplaceOne(t => t.Id.Equals(u.Id), u, new UpdateOptions { IsUpsert = true });
+            });
+
+            return Json(new { success = true, responseText = "Answers Saved!" }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public bool AlreadyAnswered(string userId, List<Question> questions)
+        {
+            return questions.Any(q => q.Blanks!=null && q.Blanks.Any(b => b.StudentAnswers!=null && b.StudentAnswers.Any(sa => sa.StudentId == new ObjectId(userId))));
+        }
+
+        public int CalculateStudentScore(Blank blank, string answer)
+        {
+            var result = 0;
+            //TODO: calculate score
+
+            return result;
+        }
+
+
+
 
         //GET: /Exams/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -67,6 +151,7 @@ namespace ExamScoringApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Exam exam)
         {
             var Id = new ObjectId();
@@ -100,6 +185,7 @@ namespace ExamScoringApp.Controllers
         }
 
         // GET: /Exams/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
             var Id = new ObjectId();
@@ -120,6 +206,7 @@ namespace ExamScoringApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id, Exam exam)
         {
             if (!string.IsNullOrEmpty(exam.Course))
@@ -132,6 +219,7 @@ namespace ExamScoringApp.Controllers
         }
 
         // GET: /Exams/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
             var Id = new ObjectId();
@@ -150,6 +238,7 @@ namespace ExamScoringApp.Controllers
 
         // POST: /Exams/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {

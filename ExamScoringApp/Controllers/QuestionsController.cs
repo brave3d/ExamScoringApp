@@ -42,6 +42,7 @@ namespace ExamScoringApp.Controllers
 
 
         //GET: /Questions/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             var exams = Db.Exams.Find(s => true).ToList();
@@ -125,6 +126,7 @@ namespace ExamScoringApp.Controllers
         }
 
         // GET: /Questions/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(string id)
         {
             var Id = new ObjectId();

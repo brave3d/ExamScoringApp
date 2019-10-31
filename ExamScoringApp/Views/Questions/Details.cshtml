@@ -71,7 +71,7 @@
                             {
 
                                 @Model.Text.Slice(blankIndex, blank.Index);
-                                <span class="highlight"> @Model.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length) </span>
+                                <span class="highlight"> @Model.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
                                 blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
                             }
                             @Model.Text.Slice(blankIndex, Model.Text.Length)
@@ -111,7 +111,6 @@
 
 
     function displayBlanksAndAnswers() {
-    questionTxt = '@Model.Text';
     displyBlanks.forEach(b => {
     document.getElementById('displayBlanks').innerHTML +=
         ` <div class="blank">
@@ -122,34 +121,6 @@
     })
 
     document.getSelection().removeAllRanges()
-    }
-    function highlightQuestion() {
-        document.getElementById('questionText').innerHTML = '';
-        result = ``;
-        var j = 0;
-        for (var i = 0; i < questionTxt.length; i++) {
-            if (i<blanks[j].Index) {
-                result += questionTxt[i];
-            }
-            if (i == blanks[j].Index) {
-               result += `<span class="highlight"> ${questionTxt[i]}`
-            }
-            if (i> blanks[j].Index && i< blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length ) {
-                  result += questionTxt[i];
-            }
-            if (i== blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length -1) {
-                result += ` </span>` + " ";
-                j++
-                if (blanks[j] == undefined) {
-                    j--;
-                }
-            }
-            if (i > blanks[j].Index + blanks[j].PossibleAnswers[0].AnswerTxt.length) {
-                result += questionTxt[i];
-            }
-
-        }
-         document.getElementById('questionText').innerHTML = result;
     }
 
 </script>
