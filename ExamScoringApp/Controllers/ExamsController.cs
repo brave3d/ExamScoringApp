@@ -71,10 +71,10 @@ namespace ExamScoringApp.Controllers
         
 
             var questions = Db.Questions.Find(q => q.ExamId == new ObjectId(examId)).ToList();
-            //if (AlreadyAnswered(User.Identity.GetUserId(), questions))
-            //{
-            //    return Json(new { success = false, responseText = "You've already answered the questions" }, JsonRequestBehavior.AllowGet);
-            //}
+            if (AlreadyAnswered(User.Identity.GetUserId(), questions))
+            {
+                return Json(new { success = false, responseText = "You've already answered the questions" }, JsonRequestBehavior.AllowGet);
+            }
 
             if (answers.Count != questions.Count)
             {

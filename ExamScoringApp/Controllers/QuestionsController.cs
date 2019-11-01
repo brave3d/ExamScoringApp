@@ -20,6 +20,7 @@ namespace ExamScoringApp.Controllers
     {
 
         // GET: /Questions/
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Index()
         {
             var questions = await Db.Questions.Find(s => true).ToListAsync();
@@ -106,6 +107,7 @@ namespace ExamScoringApp.Controllers
             return View(question);
         }
 
+        [Authorize(Roles ="Admin")]
 
         // GET: /Questions/Details/5
         public async Task<ActionResult> Details(string id)
