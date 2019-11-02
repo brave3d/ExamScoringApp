@@ -47,9 +47,9 @@ function makeBlank() {
     var bId = randomId();
     document.getElementById('blanks').appendChild(getNodes(
         ` <div class="blank" id="${bId}">
-	<label> Answer <input class="form-control" type="text" value="${this.shareTxt}"></label>
+	<label> Answer <input class="form-control" type="text" disabled="disabled" value="${this.shareTxt}"></label>
 	<label> Score  <input class="form-control" type="number" value="10" max="10" min="0" placeholder="score"></label>
-	<label> Index  <input class="form-control" type="number" value="${index}" placeholder="index" disabled="true"></label>
+	<label> Index  <input class="form-control" type="number" value="${index}" placeholder="index" disabled="disabled"></label>
 	<button type="button" class="btn btn-default" onclick="copy('${bId}')">Clone</button>
 	 </div>`)[0]);
     highlight();
@@ -61,7 +61,10 @@ function copy(blankId) {
     var copy = blank.cloneNode(true);
     var copyId = randomId();
     copy.setAttribute('id', `${copyId}`);
+    console.log(copy);
     copy.children[3].setAttribute("onclick", `copy('${copyId}')`);
+    copy.children[0].children[0].removeAttribute("disabled");
+
     insertAfter(blank, copy);
 }
 
@@ -89,7 +92,73 @@ function reset() {
     removeHighlights();
     blanks = [];
     document.getElementById('blanks').innerHTML = "";
+    $('#question').html($('#Text').val());
 }
 // document.getElementById('reset').addEventListener('click', removeHighlights);
 
 
+
+
+$("#Text").on('input', (e) => {
+    $('#question').html(e.target.value);
+    reset();
+});
+
+
+function save() {
+    var blanks = [];
+    var points = document.getElementById('Points').value;
+    var examId = $('#exams-select').find(":selected").attr('data-id');
+    BlanksArr = Array.from(document.getElementsByClassName('blank'));
+    BlanksArr.forEach(b => blanks.push(
+        {
+            "AnswerTxt": b.children[0].children[0].value,
+            "Score": b.children[1].children[0].value,
+            "Index": b.children[2].children[0].value,
+        }));
+    console.log(blanks);
+    const groupedBlanks = _.groupBy(blanks, b => b.Index);
+    const finalBlanks = [];
+    Object.entries(groupedBlanks).forEach(e => { finalBlanks.push({ "Index": e[0], "PossibleAnswers": e[1] }) })
+
+    //console.log(groupedBlanks);
+    //console.log(finalBlanks);
+    var text = $('#Text').val();
+    var dbQuestionId = null;
+    if (document.location.pathname.indexOf('Edit')>0) {
+        var pathChunks = document.location.pathname.split('/');
+        dbQuestionId = pathChunks[pathChunks.length - 1];
+    }
+    data = {
+        "examId": examId,
+        "text": text,
+        "blanks": finalBlanks,
+        "points": points,
+        "questionId": dbQuestionId
+    }
+
+    $.ajax({
+        url: '/ExamScoring/Questions/SaveQuestion',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            //alert();
+            if (response.success)
+                advAlert("Success!", response.responseText, "success")
+            else
+                advAlert("Error!", response.responseText, "error")
+        },
+        error: function () {
+            advAlert("Error!", "Try again later", "error")
+        }
+    });
+
+}
+
+function advAlert(title, text, type) {
+    swal(title, text, type).then((value) => {
+        if (type == "success") { window.location.href = window.location.origin + "/ExamScoring/Questions/Index/"; }
+
+    });
+}

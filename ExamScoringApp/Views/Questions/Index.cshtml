@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExamScoringApp.Models.Question>
+﻿@model IEnumerable<ExamScoringApp.Models.QuestionVM>
 
 
 
@@ -54,7 +54,7 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.ExamId)
+            @Html.DisplayFor(modelItem => item.Exam.Course)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Text)
@@ -77,7 +77,7 @@
             @if (User.IsInRole("Admin"))
             {
 
-                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })*@
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })
 
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
             }

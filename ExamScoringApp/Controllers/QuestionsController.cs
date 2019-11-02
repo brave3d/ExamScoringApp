@@ -21,23 +21,32 @@ namespace ExamScoringApp.Controllers
 
         // GET: /Questions/
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string id=null)
         {
+          
             var questions = await Db.Questions.Find(s => true).ToListAsync();
-            //var examVms = new List<Question>();
-            //foreach (var item in questions)
-            //{
-            //    examVms.Add(new TextVM
-            //    {
-            //        Id = item.Id,
-            //        IsTagged = await Tagged(item),
-            //        ReadOnly = item.ReadOnly,
-            //        Source = item.Source,
-            //        Txt = item.Txt
-            //    });
-            //}
+            if (id != null)
+            {
+                questions = questions.Where(q => q.ExamId == new ObjectId(id)).ToList();
+            }
+            var questionVMs = new List<QuestionVM>();
+            foreach (var item in questions)
+            {
+                questionVMs.Add(new QuestionVM
+                {
+                    Id = item.Id,
+                    Text = item.Text,
+                    Points = item.Points,
+                    Exam = GetExam(item.ExamId),
+                });
+            }
 
-            return View(questions);
+            return View(questionVMs.OrderBy(q=>q.Exam.Course));
+        }
+
+        public Exam GetExam(ObjectId examId)
+        {
+            return Db.Exams.Find(e => e.Id == examId).FirstOrDefault();
         }
 
 
@@ -48,12 +57,13 @@ namespace ExamScoringApp.Controllers
         {
             var exams = Db.Exams.Find(s => true).ToList();
             ViewData["Exams"] = exams;
-            return View();
+            return View(new Question());
         }
 
 
         //[HttpPost]
-        public async Task<ActionResult> SaveQuestion(string examId, string text, List<Blank> blanks,int points)
+        [Authorize(Roles ="Admin")]
+        public async Task<ActionResult> SaveQuestion(string examId, string text, List<Blank> blanks,int points = 0, string questionId =null)
         {
             var Id = new ObjectId();
             if (string.IsNullOrEmpty(examId) || !ObjectId.TryParse(examId, out Id))
@@ -76,8 +86,7 @@ namespace ExamScoringApp.Controllers
             {
                 return Json(new { success = false, responseText = "Please Add blanks to the question" }, JsonRequestBehavior.AllowGet);
             }
-
-
+         
             var q = new Question
             {
                 Text = text,
@@ -85,9 +94,27 @@ namespace ExamScoringApp.Controllers
                 ExamId = Id,
                 Points = points
             };
-            await Db.Questions.InsertOneAsync(q);
+            if (questionId!=null)
+            {
+                var dbQuestion = Db.Questions.Find(a => a.Id == new ObjectId(questionId)).FirstOrDefault();
+                dbQuestion.Text = q.Text;
+                dbQuestion.ExamId = q.ExamId;
+                dbQuestion.Points = q.Points;
+                dbQuestion.Blanks.Clear();
+                dbQuestion.Blanks.AddRange(q.Blanks);
+                await Db.Questions.ReplaceOneAsync(t => t.Id == new ObjectId(questionId), dbQuestion, new UpdateOptions { IsUpsert = true });
+            }
+            else {
+                await Db.Questions.InsertOneAsync(q);
+            }
             return Json(new { success = true, responseText = "Question Saved!" }, JsonRequestBehavior.AllowGet);
 
+        }
+
+
+        private bool QuestionExistsInDb(Question q)
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -142,6 +169,8 @@ namespace ExamScoringApp.Controllers
             {
                 return HttpNotFound();
             }
+            var exams = Db.Exams.Find(s => true).ToList();
+            ViewData["Exams"] = exams;
             return View(result);
         }
 
@@ -155,7 +184,7 @@ namespace ExamScoringApp.Controllers
              question.Id = new ObjectId(id);
              await Db.Questions.ReplaceOneAsync(t => t.Id.Equals(question.Id), question, new UpdateOptions{ IsUpsert=true });
              return RedirectToAction("Index");
-            return View(question);
+            //return View(question);
         }
 
         // GET: /Questions/Delete/5

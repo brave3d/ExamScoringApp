@@ -1,29 +1,33 @@
-﻿@model ExamScoringApp.Models.Exam
-
+﻿@model ExamScoringApp.Models.Question
+@using ExamScoringApp.Models
+@using Microsoft.AspNet.Identity;
+@using ExamScoringApp.Helpers
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
+    var userId = User.Identity.GetUserId();
+    var Exams = (List<Exam>)ViewData["Exams"];
+
 }
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>Edit</h2>
+        <h2>Create</h2>
         <ol class="breadcrumb">
             <li>
                 @Html.ActionLink("List", "Index")
             </li>
             <li class="active">
-                <strong>Edit</strong>
+                <strong>Create</strong>
             </li>
         </ol>
     </div>
     <div class="col-sm-8">
         <div class="title-action">
-			@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary"})
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
         </div>
     </div>
 </div>
-
 
 
 
@@ -32,70 +36,136 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Edit Exam</h5>
+                    <h5>Create Question</h5>
                 </div>
                 <div class="ibox-content">
 
-				@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
 
-        @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.Id)
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Course, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.Course, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Course)
-            </div>
-        </div>
-
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.TeacherId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TeacherId)
-                @Html.ValidationMessageFor(model => model.TeacherId)
-            </div>
-        </div>*@
-
-       <div class="form-group">
-            @Html.LabelFor(model => model.Semester, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Semester)
-                @Html.ValidationMessageFor(model => model.Semester)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Year, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Year)
-                @Html.ValidationMessageFor(model => model.Year)
-            </div>
-        </div>
+                            @*<div class="form-group">
+                                    @Html.LabelFor(model => model.ExamId, new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                         @Html.EditorFor(model => model.Course)
+                                        <input class="form-control" type="text" value="@Model.ExamId" />
+                                        @Html.ValidationMessageFor(model => model.ExamId)
+                                    </div>
+                                </div>*@
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-primary" />
-				@Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white"})
-            </div>
-        </div>
-    </div>
-}
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExamId, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <select id="exams-select" class="form-control">
+                                        <option> Select an Exam</option>
+                                        @foreach (var item in Exams)
+                                        {
+                                            var selected = item.Id == Model.ExamId ? "selected" : "";
+                                            <option @selected data-id="@item.Id" name="@item.Course"> @item.Course </option>
+                                        }
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.Text)
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Points, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Points)
+                                    @Html.ValidationMessageFor(model => model.Points)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Text, new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Text)
+                                    @Html.ValidationMessageFor(model => model.Text)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="Text">Add Blanks</label>
+                                <article id="container">
+                                    @*<p class="info">Select the word/words you want to omit</p>*@
+                                    <h2 id="question">
+                                        @*@Model.Text*@
+                                        @{
+                                            var blankIndex = 0;
+                                        }
+                                        @foreach (var blank in Model.Blanks)
+                                        {
+
+                                            @Model.Text.Slice(blankIndex, blank.Index);
+                                            <span class="highlight"> @Model.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
+                                            blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                                        }
+                                        @Model.Text.Slice(blankIndex, Model.Text.Length)
+                                    </h2>
+                                    <template id="shareBoxTemplate">
+                                        <span id="shareBox"><button>Make Blank</button></span>
+                                    </template>
+
+                                </article>
+
+                                <div id="blanks">
+                                    @foreach (var item in Model.Blanks)
+                                    {
+                                        int i = 0;
+                                        foreach (var possibleAnswer in item.PossibleAnswers)
+                                        {
+                                            var disabled =  i==0? "disabled": "";
+                                            <div class="blank" id="@possibleAnswer.GetHashCode()">
+                                                <label> Answer <input class="form-control" type="text" @disabled value="@possibleAnswer.AnswerTxt"></label>
+                                                <label> Score  <input class="form-control" type="number" value="@possibleAnswer.Score" max="10" min="0" placeholder="score"></label>
+                                                <label> Index  <input class="form-control" type="number" value="@item.Index" placeholder="index" disabled="disabled"></label>
+                                                <button type="button" class="btn btn-default" onclick="copy('@possibleAnswer.GetHashCode()')">Clone</button>
+                                            </div>
+                                            i++;
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+
+                                    @*<input type="submit" value="Create" class="btn btn-primary" />*@
+                                    @*@Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white" })*@
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <button type="button" onclick="save()" class="btn btn-primary"> Save </button>
+                    <button type="button" onclick="reset()" class="btn btn-warning"> Reset </button>
+                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white" })
 
 
                 </div>
             </div>
         </div>
     </div>
- </div>
+</div>
 
 
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+    
+<script src="~/Content/js/rangy-core.min.js"></script>
+<script src="~/Content/js/rangy-classapplier.js"></script>
+<script src="~/Content/js/rangy-highlighter.js"></script>
+
+<script src="~/Scripts/draggable/jquery.min.js"></script>
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script src="~/Content/js/lodash.min.js"></script>
+
+<script src="~/Content/js/script.js"></script>

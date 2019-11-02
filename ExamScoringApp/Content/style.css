@@ -7680,25 +7680,42 @@ h3 {
     width: 15em;
 }
 .question-text{
-  /* line-height: 2.5; */
-  /* font-family: times; */
-  /* font-size: 16px; */
-  border: 1px solid #e0e0e0;
-  background: #fbfbfb;
-  padding: 20px 15px;
-  border-radius: 7px;
-  /* display: flex; */
+  
+/* line-height: 2.5; */
+  
+/* font-family: times; */
+  
+/* font-size: 16px; */
+  
+border: 1px solid #e0e0e0;
+  
+background: #fbfbfb;
+  
+padding: 20px 15px;
+  
+border-radius: 7px;
+  
+/* display: flex; */
 }
 .points{
-  font-size: 9px;
-  width: 78px;
-  background: #e4e4e4;
-  height: 26px;
-  border-radius: 20px;
-  padding: 7px 10px;
-  text-align: center;
-  margin-top: -2px;
-  align-self: center;
+  
+font-size: 9px;
+  
+width: 78px;
+  
+background: #e4e4e4;
+  
+height: 26px;
+  
+border-radius: 20px;
+  
+padding: 7px 10px;
+  
+text-align: center;
+  
+margin-top: -2px;
+  
+align-self: center;
 }
 .q-cont {
     width: 100%;
@@ -7706,10 +7723,14 @@ h3 {
     justify-content: space-between;
 }
 .q-text{
-width: 90%;
-line-height: 2.5;
-/* font-size: 14px; */
-align-self: center;
+
+width: 90%;
+
+line-height: 2.5;
+
+/* font-size: 14px; */
+
+align-self: center;
 }
 
 .swal-button:not([disabled]):hover {
@@ -7734,4 +7755,7 @@ h3 {
 
 .swal-button--cancel:not([disabled]):hover {
     background-color: #e7e7e7;
+}
+.table td:last-child{
+  min-width:320px;
 }
