@@ -125,9 +125,14 @@ function save() {
     //console.log(finalBlanks);
     var text = $('#Text').val();
     var dbQuestionId = null;
+    var requestExamId = null;
     if (document.location.pathname.indexOf('Edit')>0) {
         var pathChunks = document.location.pathname.split('/');
         dbQuestionId = pathChunks[pathChunks.length - 1];
+       
+        if (document.location.search.split("=")[1] !=undefined) {
+            requestExamId = document.location.search.split("=")[1];
+        }
     }
     data = {
         "examId": examId,
@@ -138,14 +143,14 @@ function save() {
     }
 
     $.ajax({
-        url: '/ExamScoring/Questions/SaveQuestion',
+        url: '/Questions/SaveQuestion',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             //alert();
             if (response.success)
-                advAlert("Success!", response.responseText, "success")
+                advAlert("Success!", response.responseText, "success", requestExamId)
             else
                 advAlert("Error!", response.responseText, "error")
         },
@@ -156,9 +161,14 @@ function save() {
 
 }
 
-function advAlert(title, text, type) {
+function advAlert(title, text, type, requestExamId=null) {
     swal(title, text, type).then((value) => {
-        if (type == "success") { window.location.href = window.location.origin + "/ExamScoring/Questions/Index/"; }
+        if (type == "success") {
+            if (requestExamId != null)
+                window.location.href = window.location.origin + `/Questions/Index?examId=${requestExamId}`;
+            else
+                window.location.href = window.location.origin + `/Questions/Index`;
+        }
 
     });
 }

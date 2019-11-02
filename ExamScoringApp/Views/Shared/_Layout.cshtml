@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,8 @@
     <link href="~/Content/css/sweetalert.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Styles.Render("~/font-awesome/css")
-
+    <link href="~/Content/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/css/datatables.min.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -46,6 +47,26 @@
 
     @Scripts.Render("~/bundles/inspinia")
     @RenderSection("scripts", required: false)
-    <script src="~/Scripts/chosen.jquery.min.js"></script>  
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+
+    @*<script src="~/Content/js/datatables.min.js"></script>*@
+    <script src="~/Scripts/plugins/dataTables/jquery.dataTables.min.js"></script>
+    <script>
+
+        //$(document).ready(function () {
+        //    //$('.data-table').DataTable({});
+        //    $('.table').DataTable({
+        //        "initComplete": function (settings, json) {
+        //            $('input[type=search]').addClass('form-control');
+        //            $('select[name=table_length]').addClass('form-control');
+        //        },
+        //        pageLength: 25,
+        //        responsive: true,
+        //    });
+
+        //});
+    </script>
+
+
 </body>
 </html>

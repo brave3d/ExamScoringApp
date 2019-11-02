@@ -6,6 +6,8 @@
 @{
     ViewBag.Title = "Delete";
     var exam = (Exam)ViewData["Exam"];
+    //var examId = Request.QueryString["examId"];
+    //var urluestionId = Model.Id;
 
 }
 
@@ -72,7 +74,7 @@
 
                         <div class="form-actions no-color">
                             <input type="submit" value="Delete" class="btn btn-primary" />
-                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-white" })
+                            @Html.ActionLink("Back to List", "Index",new {examId = Request.QueryString["examId"] }, new { @class = "btn btn-white" })
                         </div>
                     }
                 </div>

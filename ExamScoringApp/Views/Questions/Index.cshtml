@@ -1,9 +1,8 @@
 ﻿@model IEnumerable<ExamScoringApp.Models.QuestionVM>
 
-
-
 @{
     ViewBag.Title = "Index";
+    var examId = Request.QueryString["examId"];
 }
 
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -23,89 +22,79 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>List of Exams</h5>
-					<div class="ibox-tools">
+                    <h5>List of Questions</h5>
+                
+                    <div class="ibox-tools">
                         @if (User.IsInRole("Admin"))
                         {
-						   @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
+                            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
                         }
                     </div>
                 </div>
                 <div class="ibox-content">
 
-<table id="table" class="table table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ExamId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Text)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Points)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.Year)
-        </th>*@
-        @*<th>   @Html.DisplayNameFor(model => model.IsTagged) </th>*@
-        <th style="width: 30%;"></th>
-    </tr>
+                    <table id="table" class="table data-table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    No
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ExamId)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Text)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Points)
+                                </th>
+                                <th style="width: 30%;"> Manage</th>
+                            </tr>
+                        </thead>
+                        @{ int i = 1;}
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => i)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Exam.Course)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Text)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Points)
+                                </td>
+                                <td>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Exam.Course)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Text)
-        </td>
-         <td>
-            @Html.DisplayFor(modelItem => item.Points)
-        </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.Year)
-        </td>*@
-        @*<td>
-            @Html.DisplayFor(modelItem => item.IsTagged)
-        </td>*@
-        <td>
-            @*@Html.ActionLink("Cümleler", "SentencesList", "Sentences", new { id = item.Id }, new { @class = "btn btn-primary btn-xs" })*@
-            @*@Html.ActionLink("Etiketli Cümleler", "TaggedSentences", "Sentences", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })*@
+                                    @Html.ActionLink("Details", "Details", new { id = item.Id, examId = examId }, new { @class = "btn btn-info btn-xs" })
 
-            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-xs" })
+                                    @if (User.IsInRole("Admin"))
+                                    {
 
-            @if (User.IsInRole("Admin"))
-            {
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id, examId = examId }, new { @class = "btn btn-warning btn-xs" })
 
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-xs" })
-
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-xs" })
-            }
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id, examId = examId }, new { @class = "btn btn-danger btn-xs" })
+                                    }
 
 
 
 
 
-        </td>
-    </tr>
-}
+                                </td>
+                            </tr>
+                            i++;
+                        }
 
-</table>
+                    </table>
 
                 </div>
             </div>
         </div>
     </div>
- </div>
+</div>
 
-@*<script src="~/Scripts/jquery-2.1.1.min.js"></script>
-<script src="~/Scripts/plugins/dataTables/jquery.dataTables.js"></script>
-<script>
-
-    $(document).ready(function () {
-        $('#table').DataTable();
-
-    });
-</script>*@
 
 

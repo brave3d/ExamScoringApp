@@ -21,13 +21,13 @@ namespace ExamScoringApp.Controllers
 
         // GET: /Questions/
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Index(string id=null)
+        public async Task<ActionResult> Index(string examId=null)
         {
           
             var questions = await Db.Questions.Find(s => true).ToListAsync();
-            if (id != null)
+            if (examId != null)
             {
-                questions = questions.Where(q => q.ExamId == new ObjectId(id)).ToList();
+                questions = questions.Where(q => q.ExamId == new ObjectId(examId)).ToList();
             }
             var questionVMs = new List<QuestionVM>();
             foreach (var item in questions)
@@ -40,13 +40,18 @@ namespace ExamScoringApp.Controllers
                     Exam = GetExam(item.ExamId),
                 });
             }
-
+            ViewData["Exams"] = GetAllExams();
             return View(questionVMs.OrderBy(q=>q.Exam.Course));
         }
 
         public Exam GetExam(ObjectId examId)
         {
             return Db.Exams.Find(e => e.Id == examId).FirstOrDefault();
+        }
+
+        public List<Exam> GetAllExams()
+        {
+            return Db.Exams.Find(e => true).ToList();
         }
 
 
@@ -188,7 +193,7 @@ namespace ExamScoringApp.Controllers
         }
 
         // GET: /Questions/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(string id, string examId=null)
         {
             var Id = new ObjectId();
             if (string.IsNullOrEmpty(id) || !ObjectId.TryParse(id, out Id))
@@ -210,10 +215,10 @@ namespace ExamScoringApp.Controllers
         // POST: /Questions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(string id, string examId = null)
         {
             await Db.Questions.DeleteOneAsync(t => t.Id == new ObjectId(id));
-            return RedirectToAction("Index");
+            return RedirectToAction("Index",new {examId = examId });
         }
 
         protected override void Dispose(bool disposing)
