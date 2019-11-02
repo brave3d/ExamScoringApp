@@ -28,12 +28,19 @@ namespace ExamScoringApp.Controllers
             {
                 examsVMs.Add(new ExamVM {
                 Exam = item,
+                AnsweredByStudent= AnsweredByStudent(item.Id),
                 Questions = Db.Questions.Find(q => q.ExamId.Equals(item.Id)).ToList()
             });
             }
             return View(examsVMs);
         }
 
+        private bool AnsweredByStudent(ObjectId examId)
+        {
+            var questions = Db.Questions.Find(q => q.ExamId == examId).ToList();
+            var userId = User.Identity.GetUserId();
+            return questions.Any(q => q.Blanks != null && q.Blanks.Any(b => b.StudentAnswers != null && b.StudentAnswers.Any(sa => sa.StudentId == new ObjectId(userId))));
+        }
 
         public ActionResult DoExam(string id)
         {

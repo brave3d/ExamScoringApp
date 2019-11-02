@@ -77,7 +77,7 @@
             @Html.ActionLink("Delete", "Delete", new { id = item.Exam.Id }, new { @class = "btn btn-danger btn-xs" })
         }
 
-        @if (item.Questions.Any())
+        @if (item.Questions.Any() && !item.AnsweredByStudent)
         {
             @Html.ActionLink("Do Exam", "DoExam", new { id = item.Exam.Id }, new { @class = "btn btn-success btn-xs" })
         }
