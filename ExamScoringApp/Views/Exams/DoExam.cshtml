@@ -106,7 +106,8 @@
     //});
 
 
-
+    var urlPrefix = "/ExamScoring"
+    //var urlPrefix = ""
     function save() {
         var qAnswers = [];
         var questions = Array.from(document.getElementsByClassName('q-text'))
@@ -126,7 +127,7 @@
          ).then((value) => {
              if (value) {
                   $.ajax({
-                    url: '/ExamScoring/Exams/SaveAnswers',
+                    url: urlPrefix + '/Exams/SaveAnswers',
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json; charset=utf-8',
@@ -149,7 +150,7 @@
 
    function advAlert(title, text, type) {
        swal(title, text, type).then((value) => {
-           if (type == "success") { window.location.href = window.location.origin + "/ExamScoring/Exams/Index/";}
+           if (type == "success") { window.location.href = window.location.origin +urlPrefix+ "/Exams/Index/";}
 
        });
     }

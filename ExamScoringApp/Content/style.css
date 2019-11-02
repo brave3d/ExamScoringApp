@@ -7759,3 +7759,7 @@ align-self: center;
 .table td:last-child{
   min-width:320px;
 }
+
+.field-validation-error{
+  color:red;
+}
