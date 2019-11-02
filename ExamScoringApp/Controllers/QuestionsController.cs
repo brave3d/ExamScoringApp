@@ -41,7 +41,7 @@ namespace ExamScoringApp.Controllers
                 });
             }
             ViewData["Exams"] = GetAllExams();
-            return View(questionVMs.OrderBy(q=>q.Exam.Course));
+            return View(questionVMs.OrderBy(q=>q.Exam?.Course));
         }
 
         public Exam GetExam(ObjectId examId)

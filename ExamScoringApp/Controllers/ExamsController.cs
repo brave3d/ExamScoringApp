@@ -250,6 +250,7 @@ namespace ExamScoringApp.Controllers
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             await Db.Exams.DeleteOneAsync(t => t.Id == new ObjectId(id));
+            await Db.Questions.DeleteManyAsync(q => q.ExamId == new ObjectId(id));
             return RedirectToAction("Index");
         }
 

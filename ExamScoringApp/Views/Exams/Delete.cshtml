@@ -34,42 +34,45 @@
                     <h5>Category</h5>
                 </div>
                 <div class="ibox-content">
-				<h4 class="text-danger">Are you sure you want to delete this?</h4>
-				 <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Course)
-        </dt>
+                    <h4 class="text-danger">Are you sure you want to delete this?</h4>
+                    <h4 class="text-danger">Deleting an exam will also delete all of its questions!</h4>
 
-        <dd>
-            @Html.DisplayFor(model => model.Course)
-        </dd>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Course)
+                        </dt>
 
-          <dt>
-            @Html.DisplayNameFor(model => model.Semester)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Course)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Semester)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Semester)
+                        </dt>
 
-                         <dt>
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Semester)
+                        </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Year)
-        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Year)
+                        </dt>
 
-    </dl>
+                        <dd>
+                            @Html.DisplayFor(model => model.Year)
+                        </dd>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+                    </dl>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-primary" />
-            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-white" })
-        </div>
-    }
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Delete" class="btn btn-primary" />
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-white" })
+                        </div>
+                    }
                 </div>
             </div>
         </div>
