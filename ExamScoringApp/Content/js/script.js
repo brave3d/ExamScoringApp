@@ -105,6 +105,7 @@ $("#Text").on('input', (e) => {
 });
 
 
+var urlPerfix = "/ExamScoring"
 function save() {
     var blanks = [];
     var points = document.getElementById('Points').value;
@@ -143,7 +144,7 @@ function save() {
     }
 
     $.ajax({
-        url: '/Questions/SaveQuestion',
+        url: urlPerfix + '/Questions/SaveQuestion',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
@@ -165,9 +166,9 @@ function advAlert(title, text, type, requestExamId=null) {
     swal(title, text, type).then((value) => {
         if (type == "success") {
             if (requestExamId != null)
-                window.location.href = window.location.origin + `/Questions/Index?examId=${requestExamId}`;
+                window.location.href = window.location.origin + urlPerfix + `/Questions/Index?examId=${requestExamId}`;
             else
-                window.location.href = window.location.origin + `/Questions/Index`;
+                window.location.href = window.location.origin + urlPerfix+  `/Questions/Index`;
         }
 
     });
