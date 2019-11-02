@@ -33,31 +33,36 @@ function onMouseUp() {
 }
 
 blanks = [];
-blankId = 0;
+let getNodes = str => new DOMParser().parseFromString(str, 'text/html').body.childNodes;
+let randomId = () => '_' + Math.random().toString(36).substr(2, 9);
+
+function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
 function makeBlank() {
     this.remove();
     questionTxt = document.getElementById('question').innerText;
     var index = questionTxt.indexOf(this.shareTxt);
-    document.getElementById('blanks').innerHTML +=
-        ` <div class="blank" id="blank${blankId}">
+    var bId = randomId();
+    document.getElementById('blanks').appendChild(getNodes(
+        ` <div class="blank" id="${bId}">
 	<label> Answer <input class="form-control" type="text" value="${this.shareTxt}"></label>
 	<label> Score  <input class="form-control" type="number" value="10" max="10" min="0" placeholder="score"></label>
 	<label> Index  <input class="form-control" type="number" value="${index}" placeholder="index" disabled="true"></label>
-	<button class="btn btn-default" onclick="copy('${blankId}')">Clone</button>
-	 </div>`
+	<button type="button" class="btn btn-default" onclick="copy('${bId}')">Clone</button>
+	 </div>`)[0]);
     highlight();
-    blankId++;
     document.getSelection().removeAllRanges()
 }
 
 function copy(blankId) {
-    blank = document.getElementById("blank" + blankId);
-    blanksElements = Array.from(document.getElementsByClassName('blank'))
-    blanksElements.splice(blankId + 1, 0, blank);
-    document.getElementById('blanks').innerHTML = "";
-    blanks = []
-    blanksElements.forEach(b => document.getElementById('blanks').innerHTML += b.outerHTML)
-    console.log(blank);
+    blank = document.getElementById(blankId);
+    var copy = blank.cloneNode(true);
+    var copyId = randomId();
+    copy.setAttribute('id', `${copyId}`);
+    copy.children[3].setAttribute("onclick", `copy('${copyId}')`);
+    insertAfter(blank, copy);
 }
 
 
