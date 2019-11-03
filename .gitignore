@@ -3,6 +3,7 @@ ExamScoringApp/obj
 packages/
 obj/
 ExamScoringApp/App_Start
+ExamScoringApp/App_Data
 ExamScoringApp/Controllers
 ExamScoringApp/Helpers
 ExamScoringApp/Models
