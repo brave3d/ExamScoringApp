@@ -57,7 +57,7 @@
                                     @foreach (var blank in question.Blanks)
                                     {
                                         @question.Text.Slice(blankIndex, blank.Index);
-                                        if (blank.PossibleAnswers[0].AnswerTxt.Length < 90)
+                                        if (blank.PossibleAnswers[0].AnswerTxt.Length < 30)
                                         {
                                             <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
                                         }

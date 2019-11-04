@@ -7,6 +7,8 @@
     ViewBag.Title = "Create";
     var userId = User.Identity.GetUserId();
     var Exams = (List<Exam>)ViewData["Exams"];
+    var examId = (string)Request.QueryString["examId"];
+
 
 }
 
@@ -48,11 +50,15 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.ExamId, new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
-                                <select id="exams-select" class="form-control">
+                                @{
+                                var disabled = examId != null ? "disabled" : "";
+                                }
+                                <select @disabled id="exams-select" class="form-control">
                                     <option> Select an Exam</option>
                                     @foreach (var item in Exams)
                                     {
-                                        <option data-id="@item.Id" name="@item.Course"> @item.Course </option>
+                                        var selected = item.Id == new MongoDB.Bson.ObjectId(examId) ? "selected" : "";
+                                        <option @disabled @selected data-id="@item.Id" name="@item.Course"> @item.Course </option>
                                     }
                                 </select>
                                 @Html.ValidationMessageFor(model => model.Text)
