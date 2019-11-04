@@ -30,7 +30,6 @@
 </div>
 
 
-
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -46,17 +45,6 @@
 
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true)
-
-                        @*<div class="form-group">
-            @Html.LabelFor(model => model.ExamId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                 @Html.EditorFor(model => model.Course)
-                <input class="form-control" type="text" value="@Model.ExamId" />
-                @Html.ValidationMessageFor(model => model.ExamId)
-            </div>
-        </div>*@
-
-
                         <div class="form-group">
                             @Html.LabelFor(model => model.ExamId, new { @class = "control-label col-md-2" })
                             <div class="col-md-10">
@@ -91,7 +79,6 @@
                         <div class="form-group">
                             <label class="control-label col-md-2" for="Text">Add Blanks</label>
                             <article id="container">
-                                @*<p class="info">Select the word/words you want to omit</p>*@
                                 <h2 id="question">
                                     Select a word to omit!
                                 </h2>
@@ -104,14 +91,8 @@
                             <div id="blanks">
                             </div>
                         </div>
-
-
-
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
-
-                                @*<input type="submit" value="Create" class="btn btn-primary" />*@
-                                @*@Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-white" })*@
                             </div>
                         </div>
                     </div>

@@ -7672,7 +7672,7 @@ h3 {
       display: inline-block;
     width: auto;
 }
-.blank-input{border-style: dashed;break-after: avoid;border: none;border-bottom: 1px dashed #999;text-align: center;width: 10em;transition: width 300ms ease;padding: 5px;height: 20px;font-weight: bold;/* color: #fd3737; */font-size: 13px;background: #fbfbfb;}
+.blank-input{border-style: dashed;break-after: avoid;border: none;border-bottom: 1px dashed #999;text-align: center;width: 10em;transition: width 300ms ease;padding: 5px;height: 20px;font-weight: bold;/* color: #fd3737; */font-size: 13px;background: #fbfbfb;word-break: break-word;max-width: 100%;}
 
 .blank-input:focus {
     outline: none;
@@ -7762,4 +7762,12 @@ align-self: center;
 
 .field-validation-error{
   color:red;
+}
+
+.blank-area{
+    min-width: 100%;
+    text-align:left;
+    background: white;
+    border: 1px solid #e2e2e2;
+    font-weight: bold;
 }

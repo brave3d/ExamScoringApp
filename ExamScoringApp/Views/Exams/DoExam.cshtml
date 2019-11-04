@@ -57,7 +57,14 @@
                                     @foreach (var blank in question.Blanks)
                                     {
                                         @question.Text.Slice(blankIndex, blank.Index);
-                                        <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
+                                        if (blank.PossibleAnswers[0].AnswerTxt.Length < 90)
+                                        {
+                                            <input class="blank-input form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index" />
+                                        }
+                                        else
+                                        {
+                                            <textarea rows="4" class="blank-area form-control d-inline-block" type="text" value="" id="@question.Id@question.Blanks[j].Index"></textarea>
+                                        }
                                         blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
                                     }
                                     @question.Text.Slice(blankIndex, question.Text.Length)
@@ -104,8 +111,13 @@
     //    $('#question').html(e.target.value);
     //    questionText = e.target.value;
     //});
-
-
+    charCount = 0;
+    $(".blank-input").on('input', (e) => {
+        charCount = e.target.value.length;
+        if (charCount > 25) e.target.style = `width: ${charCount * 8}px`;
+        else e.target.style = ``;
+        //console.log(e.target.value)
+    });
     var urlPrefix = "/ExamScoring"
     //var urlPrefix = ""
     function save() {
