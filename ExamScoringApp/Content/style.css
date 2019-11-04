@@ -7698,24 +7698,15 @@ border-radius: 7px;
 /* display: flex; */
 }
 .points{
-  
-font-size: 9px;
-  
-width: 78px;
-  
-background: #e4e4e4;
-  
-height: 26px;
-  
-border-radius: 20px;
-  
-padding: 7px 10px;
-  
-text-align: center;
-  
-margin-top: -2px;
-  
-align-self: center;
+  font-size: 11px;
+  width: 90px;
+  background: #e4e4e4;
+  height: 30px;
+  border-radius: 20px;
+  padding: 7px 10px;
+  text-align: center;
+  margin-top: -2px;
+  align-self: center;
 }
 .q-cont {
     width: 100%;

@@ -132,10 +132,9 @@ function save() {
     if (document.location.pathname.indexOf('Edit')>0) {
         var pathChunks = document.location.pathname.split('/');
         dbQuestionId = pathChunks[pathChunks.length - 1];
-       
-        if (document.location.search.split("=")[1] !=undefined) {
-            requestExamId = document.location.search.split("=")[1];
-        }
+    }
+    if (document.location.search.split("=")[1] != undefined) {
+        requestExamId = document.location.search.split("=")[1];
     }
     data = {
         "examId": examId,
