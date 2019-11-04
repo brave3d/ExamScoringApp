@@ -88,28 +88,6 @@ namespace ExamScoringApp.Controllers
                 return Json(new { success = false, responseText = "Please fill all the blanks" }, JsonRequestBehavior.AllowGet);
             }
             int i = 0, j = 0;
-            var a = answers[i][j];
-            //foreach (var u in questions)
-            //{
-            //    foreach (var b in u.Blanks)
-            //    {
-            //        if (b.StudentAnswers == null)
-            //        {
-            //            b.StudentAnswers = new List<StudentAnswer>();
-            //        }
-            //        b.StudentAnswers.Add(new StudentAnswer
-            //        {
-            //            StudentId = new ObjectId(User.Identity.GetUserId()),
-            //            AnswerTxt = answers[i][j],
-            //            Score = 0 //CalculateStudentScore(b,answers[i][j])
-            //        });
-            //        j++;
-            //    }
-            //    j = 0;
-            //    i++;
-            //    Db.Questions.ReplaceOne(t => t.Id.Equals(u.Id), u, new UpdateOptions { IsUpsert = true });
-
-            //}
             questions.ForEach(u =>{
                 u.Blanks.ForEach(b =>{
                     if (b.StudentAnswers == null) b.StudentAnswers = new List<StudentAnswer>();

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ExamScoringApp.Models;
+using ExamScoringApp.Helpers;
 
 namespace ExamScoringApp.Controllers
 {
@@ -35,7 +36,7 @@ namespace ExamScoringApp.Controllers
                 questionVMs.Add(new QuestionVM
                 {
                     Id = item.Id,
-                    Text = item.Text,
+                    Text = item.Text.Truncate(180),
                     Points = item.Points,
                     Exam = GetExam(item.ExamId),
                 });

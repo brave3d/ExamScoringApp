@@ -481,17 +481,7 @@
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Date.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
-    <Content Include="Views\Categories\Create.cshtml" />
-    <Content Include="Views\Categories\Delete.cshtml" />
-    <Content Include="Views\Categories\Details.cshtml" />
-    <Content Include="Views\Categories\Edit.cshtml" />
-    <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\photo.cshtml" />
-    <Content Include="Views\Texts\Create.cshtml" />
-    <Content Include="Views\Texts\Delete.cshtml" />
-    <Content Include="Views\Texts\Details.cshtml" />
-    <Content Include="Views\Texts\Edit.cshtml" />
-    <Content Include="Views\Texts\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Text.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ObjectId.cshtml" />
     <Content Include="Views\StudentsPoints\Index.cshtml" />
