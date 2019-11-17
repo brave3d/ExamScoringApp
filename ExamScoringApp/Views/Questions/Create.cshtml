@@ -57,7 +57,8 @@
                                     <option> Select an Exam</option>
                                     @foreach (var item in Exams)
                                     {
-                                        var selected = item.Id == new MongoDB.Bson.ObjectId(examId) ? "selected" : "";
+                                     
+                                        var selected = examId!=null && item.Id == new MongoDB.Bson.ObjectId(examId) ? "selected" : "";
                                         <option @disabled @selected data-id="@item.Id" name="@item.Course"> @item.Course </option>
                                     }
                                 </select>
