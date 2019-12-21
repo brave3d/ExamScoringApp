@@ -48,7 +48,7 @@ function makeBlank() {
     document.getElementById('blanks').appendChild(getNodes(
         ` <div class="blank" id="${bId}">
 	<label> Answer <input class="form-control" type="text" disabled="disabled" value="${this.shareTxt}"></label>
-	<label> Score  <input class="form-control" type="number" value="10" max="10" min="0" placeholder="score"></label>
+	<label> Score % <input class="form-control" type="number" value="100" max="100" min="0" placeholder="score"></label> 
 	<label> Index  <input class="form-control" type="number" value="${index}" placeholder="index" disabled="disabled"></label>
 	<button type="button" class="btn btn-default" onclick="copy('${bId}')">Clone</button>
 	 </div>`)[0]);

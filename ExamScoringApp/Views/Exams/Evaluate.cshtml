@@ -1,0 +1,180 @@
+﻿
+@model ExamScoringApp.Models.Base.EvaluateVM
+
+
+@{
+    ViewBag.Title = "Evaluate";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Evaluate</h2>
+        <ol class="breadcrumb">
+            <li>
+                @Html.ActionLink("List", "Index")
+            </li>
+            <li class="active">
+                <strong>Evaluate</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Evaluate Exam</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a class="nav-link active" data-toggle="tab" href="#tab-1">By Students</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">By Questions</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+
+                                    <table id="table" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    No
+                                                </th>
+                                                <th>
+                                                    Srudent Name
+                                                </th>
+                                                <th>
+                                                    Student No
+                                                </th>
+                                                <th>
+                                                    Email
+                                                </th>
+                                                <th style="width: 40%;"> </th>
+                                            </tr>
+                                        </thead>
+
+                                        @{ int i = 1;}
+
+                                        @foreach (var item in Model.Students)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => i)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.StudentName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.StudentNo)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Email)
+                                                </td>
+                                                <td>
+
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+
+                                                        @Html.ActionLink("Select", "EvaluateByStudent", new { studentId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                            i++;
+
+                                        }
+
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <table id="table" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    No
+                                                </th>
+                                                <th>
+                                                    Question
+                                                </th>
+                                                @*<th>
+                                                    Answered by admin
+                                                </th>*@
+                                                <th>
+                                                    Exam
+                                                </th>
+                                                <th style="width: 40%;"> </th>
+                                            </tr>
+                                        </thead>
+
+                                        @{ int l = 1;}
+
+                                        @foreach (var item in Model.Questions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => l)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Text)
+                                                </td>
+                                                @*<td>
+                                                    @Html.DisplayFor(modelItem => item.IsAnsweredByTeacher)
+                                                </td>*@
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => Model.Exam.Course)
+                                                </td>
+                                                <td>
+
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+
+                                                        @Html.ActionLink("Select", "EvaluateByQuestion", new { questionId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                            l++;
+
+                                        }
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    @Html.ActionLink("Back", "Index",null, new { @class = "m-t-md btn btn-default" })
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -46,10 +46,13 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Exam.Semester)
                                 </th>
-                                <th>
+                                @*<th>
                                     @Html.DisplayNameFor(model => model.Exam.Year)
+                                </th>*@
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Exam.DateTime)
                                 </th>
-                                <th style="width: 30%;"> Manage</th>
+                                <th style="width: 40%;"> Manage</th>
                             </tr>
                         </thead>
 
@@ -57,40 +60,46 @@
 
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => i)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Exam.Course)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Exam.Semester)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Exam.Year)
-                                </td>
-                                <td>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => i)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Exam.Course)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Exam.Semester)
+                        </td>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.Exam.Year)
+                        </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Exam.DateTime)
+                        </td>
+                        <td>
 
-                                    @Html.ActionLink("Details", "Details", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                            @Html.ActionLink("Details", "Details", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
 
-                                    @if (User.IsInRole("Admin"))
-                                    {
+                            @if (User.IsInRole("Admin"))
+                            {
 
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Exam.Id }, new { @class = "btn btn-warning btn-xs" })
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Exam.Id }, new { @class = "btn btn-warning btn-xs" })
 
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.Exam.Id }, new { @class = "btn btn-danger btn-xs" })
-                                        @Html.ActionLink("Questions", "Index", "Questions", new { examId = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Exam.Id }, new { @class = "btn btn-danger btn-xs" })
+                                @Html.ActionLink("Questions", "Index", "Questions", new { examId = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
 
-                                    }
+                                @Html.ActionLink("Enroll", "Enroll", new { id = item.Exam.Id }, new { @class = "btn btn-primary btn-xs" })
+                                @Html.ActionLink("Evaluate", "Evaluate", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
 
-                                    @if (item.Questions.Any() && !item.AnsweredByStudent)
-                                    {
-                                        @Html.ActionLink("Do Exam", "DoExam", new { id = item.Exam.Id }, new { @class = "btn btn-success btn-xs" })
-                                    }
+                            }
 
-                                </td>
-                            </tr>
+                            @if (item.Questions.Any() && !item.AnsweredByStudent && item.IsStudentEnrolled && DateTime.Now >= item.Exam.DateTime)
+                            {
+                                @Html.ActionLink("Do Exam", "DoExam", new { id = item.Exam.Id }, new { @class = "btn btn-success btn-xs" })
+                            }
+
+                        </td>
+                    </tr>
                             i++;
 
                         }

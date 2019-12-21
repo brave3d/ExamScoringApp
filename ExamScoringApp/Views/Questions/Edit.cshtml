@@ -122,7 +122,7 @@
                                             var disabled = i == 0 ? "disabled" : "";
                                             <div class="blank" id="@possibleAnswer.GetHashCode()">
                                                 <label> Answer <input class="form-control" type="text" @disabled value="@possibleAnswer.AnswerTxt"></label>
-                                                <label> Score  <input class="form-control" type="number" value="@possibleAnswer.Score" max="10" min="0" placeholder="score"></label>
+                                                <label> Score %  <input class="form-control" type="number" value="@possibleAnswer.Score" max="100" min="0" placeholder="score"></label>
                                                 <label> Index  <input class="form-control" type="number" value="@item.Index" placeholder="index" disabled="disabled"></label>
                                                 <button type="button" class="btn btn-default" onclick="copy('@possibleAnswer.GetHashCode()')">Clone</button>
                                             </div>

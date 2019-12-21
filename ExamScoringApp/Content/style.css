@@ -7652,7 +7652,7 @@ h3 {
 .highlight {
     background-color: #FF0A68;
     color: white;
-    text-decoration: line-through;
+    /* text-decoration: line-through; */
 }
 
 .blank {
@@ -7698,15 +7698,24 @@ border-radius: 7px;
 /* display: flex; */
 }
 .points{
-  font-size: 11px;
-  width: 90px;
-  background: #e4e4e4;
-  height: 30px;
-  border-radius: 20px;
-  padding: 7px 10px;
-  text-align: center;
-  margin-top: -2px;
-  align-self: center;
+  
+font-size: 11px;
+  
+width: 90px;
+  
+background: #e4e4e4;
+  
+height: 30px;
+  
+border-radius: 20px;
+  
+padding: 7px 10px;
+  
+text-align: center;
+  
+margin-top: -2px;
+  
+align-self: center;
 }
 .q-cont {
     width: 100%;
@@ -7761,4 +7770,33 @@ align-self: center;
     background: white;
     border: 1px solid #e2e2e2;
     font-weight: bold;
+}
+
+.date, .clockpicker {
+    padding: 0 0 0 15px !important;
+}
+    .date input, .clockpicker input {
+        max-width: 98%;
+    }
+
+.flex {
+    display: flex;
+    justify-content: flex-start;
+}
+.flex span {
+        padding: 0 10px 0 10px;
+        color: #999;
+        border: 1px solid #ccc;
+        border-left: 0;
+        line-height: 2.5;
+        /* border-radius: 7px 0 0 7px; */
+        background: white;
+}
+
+dd{
+      line-height: 2.0;
+}
+
+.sweet-alert[data-has-cancel-button=false] button {
+    background-color: #1ab394 !important;
 }

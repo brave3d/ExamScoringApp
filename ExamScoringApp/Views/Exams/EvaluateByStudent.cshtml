@@ -1,0 +1,120 @@
+﻿@using ExamScoringApp.Helpers
+@model ExamScoringApp.Models.Base.EvaluateVM
+@{
+    ViewBag.Title = "EvaluateByStudent";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>EvaluateByStudent</h2>
+        <ol class="breadcrumb">
+            <li>
+                @Html.ActionLink("List", "Index")
+            </li>
+            <li class="active">
+                <strong>EvaluateByStudent</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>EvaluateByStudent</h5>
+                </div>
+                <div class="ibox-content">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.SelectedStudent.StudentName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.SelectedStudent.StudentName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.SelectedStudent.StudentNo)
+                        </dt>
+                        <dd>
+
+                            @Html.DisplayFor(model => model.SelectedStudent.StudentNo)
+                        </dd>
+
+                    </dl>
+
+                    <p>Student's Answers : </p>
+
+
+                    @{ int index = 1;}
+                    <ol style="padding:0 15px">
+                        @foreach (var question in Model.Questions)
+                        {
+
+                            <li class="m-b-lg question-text">
+                                <div class="q-cont">
+                                    <div class="q-text">
+                                        @*@Html.DisplayFor(model => model.Year)*@
+                                        @{
+                                            var j = 0;
+                                            var blankIndex = 0;
+                                        }
+                                        @foreach (var blank in question.Blanks)
+                                        {
+
+                                            @question.Text.Slice(blankIndex, blank.Index);
+                                            <span class="highlight"> @question.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
+                                            blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                                            var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(Model.SelectedStudent.Id)).FirstOrDefault();
+                                            if (studentAnswer != null)
+                                            {
+                                                <p> Student Answer: <b>@studentAnswer.AnswerTxt </b> </p>
+                                                <p> Score: <b>@studentAnswer.Score </b> </p>
+
+                                            }
+                                            else
+                                            {
+                                                <p><b> No answers found from the selected student </b></p>
+
+                                            }
+
+                                            j++;
+
+                                        }
+                                        @question.Text.Slice(blankIndex, question.Text.Length)
+                                    </div>
+                                    <div class="points">
+                                        @question.Points Points
+                                    </div>
+                                </div>
+                             
+                            </li>
+
+                        }
+                    </ol>
+                    @*<button type="button" onclick="save()" class="btn btn-primary"> Save </button>*@
+                    @*<button type="button" onclick="reset()" class="btn btn-warning"> Reset </button>*@
+                    @Html.ActionLink("Back", "Evaluate", new { id= Model.Exam.Id }, new { @class = "btn btn-white" })
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
