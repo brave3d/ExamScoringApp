@@ -44,7 +44,7 @@
 
                     </dl>
 
-                    <p>Student's Answers : </p>
+                    @*<p>Student's Answers : </p>*@
 
 
                     @{ int index = 1;}
@@ -60,29 +60,54 @@
                                             var j = 0;
                                             var blankIndex = 0;
                                         }
+                                        <b>Correct Answers:    </b>
+
                                         @foreach (var blank in question.Blanks)
                                         {
+
 
                                             @question.Text.Slice(blankIndex, blank.Index);
                                             <span class="highlight"> @question.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
                                             blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
-                                            var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(Model.SelectedStudent.Id)).FirstOrDefault();
-                                            if (studentAnswer != null)
-                                            {
-                                                <p> Student Answer: <b>@studentAnswer.AnswerTxt </b> </p>
-                                                <p> Score: <b>@studentAnswer.Score </b> </p>
-
-                                            }
-                                            else
-                                            {
-                                                <p><b> No answers found from the selected student </b></p>
-
-                                            }
-
                                             j++;
 
                                         }
                                         @question.Text.Slice(blankIndex, question.Text.Length)
+
+
+                                        @{
+                                            j = 0;
+                                            blankIndex = 0;
+                                        }
+
+                                        <div>
+                                            <b>Student's Answers: </b>
+                                            @foreach (var blank in question.Blanks)
+                                            {
+
+                                                @question.Text.Slice(blankIndex, blank.Index);
+                                                blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+                                                var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(Model.SelectedStudent.Id)).FirstOrDefault();
+                                                <span class="underlined">
+                                                    <b>
+                                                        @if (studentAnswer != null)
+                                                        {
+                                                            @studentAnswer.AnswerTxt <text>(@studentAnswer.Score%)</text>
+                                                        }
+                                                        else
+                                                        {
+                                                            <b> No Answer (0%)</b>
+                                                        }
+
+                                                    </b>
+                                                </span>
+
+                                                j++;
+
+                                            }
+                                            @question.Text.Slice(blankIndex, question.Text.Length)
+                                        </div>
+
                                     </div>
                                     <div class="points">
                                         @question.Points Points

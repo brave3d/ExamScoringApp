@@ -82,43 +82,28 @@
 
                                 <table id="table" class="table table-bordered custom-table students-answers">
                                    
-
-                                    @{ int l = 1;}
-
-
-                                    @foreach (var blank in Model.SelectedQuestion.Blanks)
-                                    {
-
-                                        foreach (var student in Model.Students)
+                                        @foreach (var answer in Model.StudentsAnswers)
                                         {
 
-                                            var possibleAnswers = "";
-                                            foreach (var pa in blank.PossibleAnswers)
-                                            {
-                                                possibleAnswers += pa.AnswerTxt + " " + pa.Score + ", ";
-                                            }
-                                            possibleAnswers = possibleAnswers.Substring(0, possibleAnswers.Length - 1);
-                                            var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(student.Id)).FirstOrDefault();
-
-                                            if (studentAnswer != null)
+                                            if (answer.AnswerTxt != null)
                                             {
                                                 <tr>
                                                     <td style="width:50%">
 
-                                                        <b>@studentAnswer.AnswerTxt</b>
+                                                        <b>@answer.AnswerTxt</b>
                                                     </td>
 
                                                     <td>
-                                                        <input id="@studentAnswer.GetHashCode()" class="score-input form-control" value="@studentAnswer.Score" type="number" min="0" max="100" />
+                                                        <input id="@answer.GetHashCode()" class="score-input form-control" value="@answer.Score" type="number" min="0" max="100" />
                                                         <span>%</span>
 
                                                     </td>
 
                                                     <td style="background: none;border-bottom: none;">
 
-                                                        @if (User.IsInRole("Admin") && studentAnswer != null)
+                                                        @if (User.IsInRole("Admin"))
                                                         {
-                                                            <button onclick="addToPossibleAnswers(questionId = '@Model.SelectedQuestion.Id', examId = '@Model.Exam.Id', studentAnswer = '@studentAnswer.AnswerTxt', blankIndex = '@Model.SelectedQuestion.Blanks.IndexOf(blank)',scoreId='@studentAnswer.GetHashCode()')" class="btn btn-info btn-xs">
+                                                            <button onclick="addToPossibleAnswers(questionId = '@Model.SelectedQuestion.Id', examId = '@Model.Exam.Id', studentAnswer = '@answer.AnswerTxt', blankIndex = '@answer.BlankIndex',scoreId='@answer.GetHashCode()')" class="btn btn-info btn-xs">
                                                                 Add to possible answers
                                                             </button>
                                                         }
@@ -128,12 +113,8 @@
                                                 </tr>
                                             }
 
-                                            l++;
 
                                         }
-
-
-                                    }
 
                                 </table>
                             </div>
