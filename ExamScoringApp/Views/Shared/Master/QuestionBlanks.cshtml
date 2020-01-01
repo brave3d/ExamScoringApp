@@ -1,0 +1,43 @@
+﻿@using Newtonsoft.Json
+@using ExamScoringApp.Models
+@model ExamScoringApp.Models.Question
+@using ExamScoringApp.Helpers
+
+<div id="displayBlanks">
+    @{
+        var j = 0;
+        var blankIndex = 0;
+    }
+</div>
+
+
+    <script>
+
+    var blanks = JSON.parse('@JsonConvert.SerializeObject(Model.Blanks)'.replace(/&quot;/g,'"'));
+    console.log('blanks', blanks);
+
+    displyBlanks = [];
+    blanks.forEach(b => {
+    b.PossibleAnswers.forEach(c => {
+    displyBlanks.push({ "Index": b.Index, "Answer": c.AnswerTxt, "Score": c.Score })
+    });
+    });
+    //highlightQuestion();
+
+
+    function displayBlanksAndAnswers() {
+    displyBlanks.forEach(b => {
+    document.getElementById('displayBlanks').innerHTML +=
+    ` <div class="blank">
+        <label>  <input class="form-control" type="text" disabled="true" value="${b.Answer}"></label>
+        <label>  <input class="form-control" type="number" value="${b.Score}" max="100" min="0" disabled="true" placeholder="score"></label>
+    </div>`
+    })
+
+    document.getSelection().removeAllRanges()
+  }
+
+    displayBlanksAndAnswers();
+
+    </script>
+

@@ -22,18 +22,25 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins" id="ibox1">
                 <div class="ibox-title">
                     <h5>List of Exams</h5>
-					<div class="ibox-tools">
+                    <div class="ibox-tools">
                         @if (User.IsInRole("Admin"))
                         {
-						   @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
+                            @*@Html.ActionLink("Auto Score all Exams", "#", null, new { @class = "btn btn-primary btn-xs", id="toggleSpinners"})*@
+
+                     
+                            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary btn-xs" })
+
                         }
                     </div>
                 </div>
                 <div class="ibox-content">
-
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
                     <table id="table" class="table table-striped">
                         <thead>
                             <tr>
@@ -47,8 +54,8 @@
                                     @Html.DisplayNameFor(model => model.Exam.Semester)
                                 </th>
                                 @*<th>
-                                    @Html.DisplayNameFor(model => model.Exam.Year)
-                                </th>*@
+                        @Html.DisplayNameFor(model => model.Exam.Year)
+                    </th>*@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Exam.DateTime)
                                 </th>
@@ -60,46 +67,48 @@
 
                         @foreach (var item in Model)
                         {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => i)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Exam.Course)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Exam.Semester)
-                        </td>
-                        @*<td>
-                            @Html.DisplayFor(modelItem => item.Exam.Year)
-                        </td>*@
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Exam.DateTime)
-                        </td>
-                        <td>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => i)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Exam.Course)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Exam.Semester)
+                                </td>
+                                @*<td>
+                        @Html.DisplayFor(modelItem => item.Exam.Year)
+                    </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Exam.DateTime)
+                                </td>
+                                <td>
 
-                            @Html.ActionLink("Details", "Details", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                    @Html.ActionLink("Details", "Details", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
 
-                            @if (User.IsInRole("Admin"))
-                            {
+                                    @if (User.IsInRole("Admin"))
+                                    {
 
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Exam.Id }, new { @class = "btn btn-warning btn-xs" })
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Exam.Id }, new { @class = "btn btn-warning btn-xs" })
 
-                                @Html.ActionLink("Delete", "Delete", new { id = item.Exam.Id }, new { @class = "btn btn-danger btn-xs" })
-                                @Html.ActionLink("Questions", "Index", "Questions", new { examId = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Exam.Id }, new { @class = "btn btn-danger btn-xs" })
+                                        @Html.ActionLink("Questions", "Index", "Questions", new { examId = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
 
-                                @Html.ActionLink("Enroll", "Enroll", new { id = item.Exam.Id }, new { @class = "btn btn-primary btn-xs" })
-                                @Html.ActionLink("Evaluate", "Evaluate", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                        @Html.ActionLink("Enroll", "Enroll", new { id = item.Exam.Id }, new { @class = "btn btn-primary btn-xs" })
+                                        @Html.ActionLink("Evaluate", "Evaluate", new { id = item.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                            <button onclick="score('@item.Exam.Id')" id="toggleSpinners" class="btn btn-default btn-xs">
+                                                Score
+                                            </button>
+                                    }
 
-                            }
+                                    @if (item.Questions.Any() && !item.AnsweredByStudent && item.IsStudentEnrolled && DateTime.Now >= item.Exam.DateTime)
+                                    {
+                                        @Html.ActionLink("Do Exam", "DoExam", new { id = item.Exam.Id }, new { @class = "btn btn-success btn-xs" })
+                                    }
 
-                            @if (item.Questions.Any() && !item.AnsweredByStudent && item.IsStudentEnrolled && DateTime.Now >= item.Exam.DateTime)
-                            {
-                                @Html.ActionLink("Do Exam", "DoExam", new { id = item.Exam.Id }, new { @class = "btn btn-success btn-xs" })
-                            }
-
-                        </td>
-                    </tr>
+                                </td>
+                            </tr>
                             i++;
 
                         }
@@ -112,6 +121,50 @@
     </div>
  </div>
 
+
+@section scripts{
+    
+    <script>
+        function score(examId) {
+           toggleLoading();
+            autoScore(examId);
+        }
+
+        function toggleLoading() {
+            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+
+        }
+        function autoScore(examId) {
+             $.ajax({
+                    url:  `${urlPrefix}/Exams/AutoScoreExam/${examId}`,
+                    type: 'Get',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success)
+                            advAlert("Success!", response.responseText, "success")
+                        else
+                            advAlert("Error!", response.responseText, "error")
+                    },
+                 error: function () {
+                     advAlert("Error!", "Try again later", "error");
+                   
+
+
+                    }
+          });
+        }
+         
+
+
+       function advAlert(title, text, type) {
+           swal(title, text, type).then((value) => {
+               setTimeout(() => { toggleLoading(); }, 500);
+       });
+    }
+
+    </script>
+
+}
 @*<script src="~/Scripts/jquery-2.1.1.min.js"></script>
 <script src="~/Scripts/plugins/dataTables/jquery.dataTables.js"></script>
 <script>

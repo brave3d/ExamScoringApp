@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight evaluateByQuestion">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -38,151 +38,111 @@
                         </dd>
 
                         <dt>
-                            @Html.DisplayNameFor(model => model.SelectedQuestion.Text)
+                            Question
                         </dt>
                         <dd>
-                            @Html.DisplayFor(model => model.SelectedQuestion.Text)
+                            <div class="m-b-lg question-text">
+                                <div class="q-cont">
+                                    <div class="q-text">
+                                        @*@Html.DisplayFor(model => model.Year)*@
+                                        @{
+                                            var blankIndex = 0;
+                                        }
+                                        @foreach (var blank in Model.SelectedQuestion.Blanks)
+                                        {
+
+                                            @Model.SelectedQuestion.Text.Slice(blankIndex, blank.Index);
+                                            <span class="highlight"> @Model.SelectedQuestion.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
+                                            blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
+
+                                        }
+                                        @Model.SelectedQuestion.Text.Slice(blankIndex, Model.SelectedQuestion.Text.Length)
+                                    </div>
+                                    <div class="points">
+                                        @Model.SelectedQuestion.Points Points
+                                    </div>
+                                </div>
+
+                            </div>
                         </dd>
+
+                        <dt>
+                            Correct Answers
+                        </dt>
+                        <dd>
+                            @Html.Partial("Master/QuestionBlanks", Model.SelectedQuestion)
+                        </dd>
+
+
+                        <dt>
+                            Students' Answers
+                        </dt>
+                        <dd>
+                            <div class="students-answers">
+
+                                <table id="table" class="table table-bordered custom-table">
+                                   
+
+                                    @{ int l = 1;}
+
+
+                                    @foreach (var blank in Model.SelectedQuestion.Blanks)
+                                    {
+
+                                        foreach (var student in Model.Students)
+                                        {
+
+                                            var possibleAnswers = "";
+                                            foreach (var pa in blank.PossibleAnswers)
+                                            {
+                                                possibleAnswers += pa.AnswerTxt + " " + pa.Score + ", ";
+                                            }
+                                            possibleAnswers = possibleAnswers.Substring(0, possibleAnswers.Length - 1);
+                                            var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(student.Id)).FirstOrDefault();
+
+                                            if (studentAnswer != null)
+                                            {
+                                                <tr>
+                                                    <td>
+
+                                                        <b>@studentAnswer.AnswerTxt</b>
+                                                    </td>
+
+                                                    <td>
+                                                        <input id="@studentAnswer.GetHashCode()" class="score-input form-control" value="@studentAnswer.Score" type="number" min="0" max="100" />
+                                                        <span>%</span>
+
+                                                    </td>
+
+                                                    <td style="background: none;border-bottom: none;">
+
+                                                        @if (User.IsInRole("Admin") && studentAnswer != null)
+                                                        {
+                                                            <button onclick="addToPossibleAnswers(questionId = '@Model.SelectedQuestion.Id', examId = '@Model.Exam.Id', studentAnswer = '@studentAnswer.AnswerTxt', blankIndex = '@Model.SelectedQuestion.Blanks.IndexOf(blank)',scoreId='@studentAnswer.GetHashCode()')" class="btn btn-info btn-xs">
+                                                                Add to possible answers
+                                                            </button>
+                                                        }
+
+                                                    </td>
+
+                                                </tr>
+                                            }
+
+                                            l++;
+
+                                        }
+
+
+                                    }
+
+                                </table>
+                            </div>
+                        </dd>
+
+
 
                     </dl>
 
-                    <p>Students' Answers : </p>
-
-                    <div class="m-b-lg question-text">
-                        <div class="q-cont">
-                            <div class="q-text">
-                                @*@Html.DisplayFor(model => model.Year)*@
-                                @{
-                                    var blankIndex = 0;
-                                }
-                                @foreach (var blank in Model.SelectedQuestion.Blanks)
-                                {
-
-                                    @Model.SelectedQuestion.Text.Slice(blankIndex, blank.Index);
-                                    <span class="highlight"> @Model.SelectedQuestion.Text.Slice(blank.Index, blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length)</span>
-                                    blankIndex = blank.Index + blank.PossibleAnswers[0].AnswerTxt.Length;
-
-                                }
-                                @Model.SelectedQuestion.Text.Slice(blankIndex, Model.SelectedQuestion.Text.Length)
-                            </div>
-                            <div class="points">
-                                @Model.SelectedQuestion.Points Points
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="students-answers">
-
-                        <table id="table" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        No
-                                    </th>
-                                    <th>
-                                        Correct Answers
-                                    </th>
-                                    <th>
-                                        Student Answer
-                                    </th>
-                                    <th>
-                                        Student Name
-                                    </th>
-                                    <th>
-                                        Student Number
-                                    </th>
-                                    <th>
-                                        Student Score
-                                    </th>
-                                    <th style="width: 25%;"> </th>
-                                </tr>
-                            </thead>
-
-                            @{ int l = 1;}
-
-
-                            @foreach (var blank in Model.SelectedQuestion.Blanks)
-                            {
-
-                                foreach (var student in Model.Students)
-                                {
-
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => l)
-                                        </td>
-                                        <td>
-                                            @{
-                                                var possibleAnswers = "";
-                                                foreach (var pa in blank.PossibleAnswers)
-                                                {
-                                                    possibleAnswers += pa.AnswerTxt + " " + pa.Score + ", ";
-                                                }
-                                                possibleAnswers = possibleAnswers.Substring(0, possibleAnswers.Length - 1);
-                                                var studentAnswer = blank.StudentAnswers?.Where(a => a.StudentId == new MongoDB.Bson.ObjectId(student.Id)).FirstOrDefault();
-
-                                            }
-
-                                            @possibleAnswers
-                                        </td>
-                                        <td>
-                                            @if (studentAnswer != null)
-                                            {
-                                                <b>  @studentAnswer.AnswerTxt </b>
-
-                                            }
-                                            else
-                                            {
-                                                <text>  No answer </text>
-                                            }
-                                        </td>
-                                        <td>
-                                            @student.StudentName
-                                        </td>
-                                        <td>
-                                            @student.StudentNo
-                                        </td>
-
-                                        <td>
-                                            @if (studentAnswer != null)
-                                            {
-                                                <b> @studentAnswer.Score</b>
-
-                                            }
-                                            else
-                                            {
-                                                <text> 0 </text>
-                                            }
-                                        </td>
-
-
-                                        <td>
-
-                                            @if (User.IsInRole("Admin") && studentAnswer != null)
-                                            {
-
-                                                <button onclick="addToPossibleAnswers(questionId = '@Model.SelectedQuestion.Id', examId = '@Model.Exam.Id', studentAnswer = '@studentAnswer.AnswerTxt', blankIndex = '@Model.SelectedQuestion.Blanks.IndexOf(blank)')" class="btn btn-info btn-xs">
-                                                    Add to possible answers
-                                                </button>
-                                                @*@Html.ActionLink("Add to possible answers", "AddToPossibleAnswers", new { }, new { @class = "btn btn-info btn-xs" })*@
-
-                                            }
-
-                                        </td>
-                                    </tr>
-                                    l++;
-
-                                }
-
-
-                            }
-
-                        </table>
-                    </div>
-
-                    @*<button type="button" onclick="save()" class="btn btn-primary"> Save </button>*@
-                    @*<button type="button" onclick="reset()" class="btn btn-warning"> Reset </button>*@
                     @Html.ActionLink("Back", "Evaluate", new { id = Model.Exam.Id }, new { @class = "btn btn-white" })
 
 
@@ -196,15 +156,16 @@
 
 <script src="~/Scripts/sweetalert.min.js"></script>
 <script>
-    function addToPossibleAnswers(questionId, examId, studentAnswer, blankIndex) {
-        prompt(studentAnswer).then(score => {
+    function addToPossibleAnswers(questionId, examId, studentAnswer, blankIndex, scoreId) {
+        var score = document.getElementById(scoreId).value;
         data = {
         "QuestionId": questionId,
         "ExamId": examId,
         "AnswerTxt": studentAnswer,
         "Score": score,
         "BlankIndex": blankIndex
-    }
+        }
+
 
     $.ajax({
         url: urlPrefix + '/Exams/AddToPossibleAnswers',
@@ -222,14 +183,18 @@
             advAlert("Error!", "Try again later", "error")
         }
              });
-        });
 
       
     }
 
 
     function advAlert(title, text, type, requestExamId=null) {
-        swal(title, text, type);
+        swal(title, text, type).then(() => {
+             if (type == "success") {
+                window.location.reload();
+             }
+        })
+       
     }
 
 

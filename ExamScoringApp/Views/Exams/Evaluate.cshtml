@@ -31,11 +31,71 @@
 
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a class="nav-link active" data-toggle="tab" href="#tab-1">By Students</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">By Questions</a></li>
+                            <li class="active"><a class="nav-link active" data-toggle="tab" href="#tab-1">By Questions</a></li>
+                            <li ><a class="nav-link " data-toggle="tab" href="#tab-2">By Students</a></li>
+
                         </ul>
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+
+                                    <table id="table" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    No
+                                                </th>
+                                                <th>
+                                                    Question
+                                                </th>
+                                                @*<th>
+                                Answered by admin
+                            </th>*@
+                                                <th>
+                                                    Exam
+                                                </th>
+                                                <th style="width: 40%;"> </th>
+                                            </tr>
+                                        </thead>
+
+                                        @{ int l = 1;}
+
+                                        @foreach (var item in Model.Questions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => l)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Text)
+                                                </td>
+                                                @*<td>
+                                @Html.DisplayFor(modelItem => item.IsAnsweredByTeacher)
+                            </td>*@
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => Model.Exam.Course)
+                                                </td>
+                                                <td>
+
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+
+                                                        @Html.ActionLink("Select", "EvaluateByQuestion", new { questionId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                            l++;
+
+                                        }
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane ">
                                 <div class="panel-body">
 
                                     <table id="table" class="table table-striped">
@@ -93,65 +153,7 @@
 
                                 </div>
                             </div>
-                            <div id="tab-2" class="tab-pane">
-                                <div class="panel-body">
 
-                                    <table id="table" class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    No
-                                                </th>
-                                                <th>
-                                                    Question
-                                                </th>
-                                                @*<th>
-                                                    Answered by admin
-                                                </th>*@
-                                                <th>
-                                                    Exam
-                                                </th>
-                                                <th style="width: 40%;"> </th>
-                                            </tr>
-                                        </thead>
-
-                                        @{ int l = 1;}
-
-                                        @foreach (var item in Model.Questions)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => l)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Text)
-                                                </td>
-                                                @*<td>
-                                                    @Html.DisplayFor(modelItem => item.IsAnsweredByTeacher)
-                                                </td>*@
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => Model.Exam.Course)
-                                                </td>
-                                                <td>
-
-                                                    @if (User.IsInRole("Admin"))
-                                                    {
-
-                                                        @Html.ActionLink("Select", "EvaluateByQuestion", new { questionId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
-
-                                                    }
-
-                                                </td>
-                                            </tr>
-                                            l++;
-
-                                        }
-
-                                    </table>
-
-
-                                </div>
-                            </div>
 
                         </div>
                     </div>

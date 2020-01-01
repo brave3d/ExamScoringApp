@@ -3238,7 +3238,9 @@ body.body-small .footer.fixed {
   border-top: 1px solid #e7eaec;
   line-height: 1.42857;
   padding: 8px;
-  vertical-align: top; }
+  vertical-align: top;
+  }
+
 
 /* PANELS */
 .panel.blank-panel {
@@ -3425,7 +3427,8 @@ code {
   border-color: #e7eaec;
   border-image: none;
   border-style: solid solid none;
-  border-width: 1px 0; }
+  border-width: 1px 0;
+  }
 
 .ibox-footer {
   color: inherit;
@@ -7799,4 +7802,63 @@ dd{
 
 .sweet-alert[data-has-cancel-button=false] button {
     background-color: #1ab394 !important;
+}
+
+.ibox-content > .sk-spinner {
+  display: none;
+}
+
+.ibox-content.sk-loading {
+  position: relative;
+}
+.ibox-content.sk-loading:after {
+  content: '';
+  background-color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.ibox-content.sk-loading > .sk-spinner {
+  display: block;
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+}
+.students-answers{
+  margin-top: 5px;
+}
+
+.custom-table{
+  margin-left: 10px;
+  border-bottom: 0;
+  border-top: 0;
+}
+.custom-table > tbody > tr > td, .custom-table > tfoot > tr > td {
+    border-top: 6px solid #ffffff;
+    line-height: 1.42857;
+    padding: 8px;
+    vertical-align: top;
+    margin: 2px;
+    border-right: 4px solid #fff;
+    background: #eeeeee;
+    font-size: 14px;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    max-height: 34px;
+    padding-left: 13px;
+}
+
+.score-input {
+   width: 73px;
+   display: inline;
+   height: 27px;
+   font-weight:bold;
+}
+
+.evaluateByQuestion .points{
+padding: 4px 10px;
 }
