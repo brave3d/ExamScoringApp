@@ -3,41 +3,35 @@
 @model ExamScoringApp.Models.Question
 @using ExamScoringApp.Helpers
 
-<div id="displayBlanks">
-    @{
-        var j = 0;
-        var blankIndex = 0;
-    }
-</div>
+    <div id="displayBlanks">
+            <table id="table" class="table table-bordered custom-table">
 
 
-    <script>
-
-    var blanks = JSON.parse('@JsonConvert.SerializeObject(Model.Blanks)'.replace(/&quot;/g,'"'));
-    console.log('blanks', blanks);
-
-    displyBlanks = [];
-    blanks.forEach(b => {
-    b.PossibleAnswers.forEach(c => {
-    displyBlanks.push({ "Index": b.Index, "Answer": c.AnswerTxt, "Score": c.Score })
-    });
-    });
-    //highlightQuestion();
+                @{ int l = 1;}
 
 
-    function displayBlanksAndAnswers() {
-    displyBlanks.forEach(b => {
-    document.getElementById('displayBlanks').innerHTML +=
-    ` <div class="blank">
-        <label>  <input class="form-control" type="text" disabled="true" value="${b.Answer}"></label>
-        <label>  <input class="form-control" type="number" value="${b.Score}" max="100" min="0" disabled="true" placeholder="score"></label>
-    </div>`
-    })
+                @foreach (var blank in Model.Blanks)
+                {
 
-    document.getSelection().removeAllRanges()
-  }
+                        foreach (var pa in blank.PossibleAnswers)
+                        {
 
-    displayBlanksAndAnswers();
+                            <tr>
+                                <td style="width:80%">
 
-    </script>
+                                    <b>@pa.AnswerTxt</b>
+                                </td>
 
+                                <td  style="width:20%">
+                                    <b>@pa.Score</b>
+
+                                </td>
+
+                            </tr>
+                        }
+                }
+            </table>
+    </div>
+
+
+   
