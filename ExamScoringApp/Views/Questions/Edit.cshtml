@@ -39,7 +39,7 @@
                     <h5>Edit Question</h5>
                 </div>
                 <div class="ibox-content">
-                    @if (Model.Blanks.Any() && Model.Blanks.Where(b => b.StudentAnswers.Any()).Any())
+                    @if (Model.Blanks.Any() && Model.Blanks.Where(b =>b.StudentAnswers !=null && b.StudentAnswers.Any()).Any())
                     {
 
                     <div class="alert alert-info alert-dismissable">
