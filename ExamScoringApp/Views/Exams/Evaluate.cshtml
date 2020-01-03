@@ -25,14 +25,14 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Evaluate Exam</h5>
+                    <h5> @Model.Exam.Course <span> @Model.Exam.Year</span></h5>
                 </div>
                 <div class="ibox-content">
 
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a class="nav-link active" data-toggle="tab" href="#tab-1">By Questions</a></li>
-                            <li ><a class="nav-link " data-toggle="tab" href="#tab-2">By Students</a></li>
+                            <li class="active"><a class="nav-link active hidden-print" data-toggle="tab" href="#tab-1">By Questions</a></li>
+                            <li ><a class="nav-link  hidden-print" data-toggle="tab" href="#tab-2">By Students</a></li>
 
                         </ul>
                         <div class="tab-content">
@@ -80,7 +80,7 @@
                                                     @if (User.IsInRole("Admin"))
                                                     {
 
-                                                        @Html.ActionLink("Select", "EvaluateByQuestion", new { questionId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                                        @Html.ActionLink("Select", "EvaluateByQuestion", new { questionId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs hidden-print" })
 
                                                     }
 
@@ -110,8 +110,12 @@
                                                 <th>
                                                     Student No
                                                 </th>
-                                                <th>
+                                                <th class="hidden-print">
                                                     Email
+                                                </th>
+
+                                                <th>
+                                                    Grade
                                                 </th>
                                                 <th style="width: 40%;"> </th>
                                             </tr>
@@ -119,32 +123,36 @@
 
                                         @{ int i = 1;}
 
-                                        @foreach (var item in Model.Students)
+                                        @foreach (var item in Model.StudentsGradesInExam.OrderBy(s=>s.StudentName).ToList())
                                         {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => i)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.StudentName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.StudentNo)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Email)
-                                                </td>
-                                                <td>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => i)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StudentName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StudentNo)
+                                        </td>
+                                        <td class="hidden-print">
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
 
-                                                    @if (User.IsInRole("Admin"))
-                                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Grade)
+                                        </td>
+                                        <td>
 
-                                                        @Html.ActionLink("Select", "EvaluateByStudent", new { studentId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs" })
+                                            @if (User.IsInRole("Admin"))
+                                            {
 
-                                                    }
+                                                @Html.ActionLink("Select", "EvaluateByStudent", new { studentId = item.Id, examId = Model.Exam.Id }, new { @class = "btn btn-info btn-xs hidden-print" })
 
-                                                </td>
-                                            </tr>
+                                            }
+
+                                        </td>
+                                    </tr>
                                             i++;
 
                                         }

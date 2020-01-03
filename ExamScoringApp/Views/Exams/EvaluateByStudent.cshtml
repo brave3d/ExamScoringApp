@@ -28,6 +28,14 @@
                 <div class="ibox-content">
                     <dl class="dl-horizontal">
                         <dt>
+                            Exam
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Exam.Course)
+                            <span> @Model.Exam.Year</span>
+
+                        </dd>
+                        <dt>
                             @Html.DisplayNameFor(model => model.SelectedStudent.StudentName)
                         </dt>
                         <dd>
