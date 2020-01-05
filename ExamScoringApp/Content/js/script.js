@@ -40,10 +40,14 @@ function insertAfter(referenceNode, newNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
+
 function makeBlank() {
     this.remove();
     questionTxt = document.getElementById('question').innerText;
-    var index = questionTxt.indexOf(this.shareTxt);
+    var mainDiv = document.getElementById("question");
+    var sel = getSelectionCharOffsetsWithin(mainDiv);
+    console.log(sel.start + ": " + sel.end);
+    var index = sel.start;
     var bId = randomId();
     document.getElementById('blanks').appendChild(getNodes(
         ` <div class="blank" id="${bId}">
@@ -52,16 +56,61 @@ function makeBlank() {
 	<label> Index  <input class="form-control" type="number" value="${index}" placeholder="index" disabled="disabled"></label>
 	<button type="button" class="btn btn-default" onclick="copy('${bId}')">Clone</button>
 	 </div>`)[0]);
-    highlight();
+     highlight();
     document.getSelection().removeAllRanges()
 }
+
+
+function getSelectionCharOffsetsWithin(element) {
+    var start = 0, end = 0;
+    var sel, range, priorRange;
+    if (typeof window.getSelection != "undefined") {
+        range = window.getSelection().getRangeAt(0);
+        priorRange = range.cloneRange();
+        priorRange.selectNodeContents(element);
+        priorRange.setEnd(range.startContainer, range.startOffset);
+        start = priorRange.toString().length;
+        end = start + range.toString().length;
+    } else if (typeof document.selection != "undefined" &&
+        (sel = document.selection).type != "Control") {
+        range = sel.createRange();
+        priorRange = document.body.createTextRange();
+        priorRange.moveToElementText(element);
+        priorRange.setEndPoint("EndToStart", range);
+        start = priorRange.text.length;
+        end = start + range.text.length;
+    }
+    return {
+        start: start,
+        end: end
+    };
+}
+
+
+
+var highlighter;
+
+rangy.init();
+highlighter = rangy.createHighlighter();
+highlighter.addClassApplier(rangy.createClassApplier('highlight'));
+function highlight() {
+    highlighter.highlightSelection('highlight');
+    var selTxt = rangy.getSelection();
+    //console.log('selTxt: ' + selTxt);
+    //   rangy.getSelection().removeAllRanges();
+}
+
+
+
+
+
 
 function copy(blankId) {
     blank = document.getElementById(blankId);
     var copy = blank.cloneNode(true);
     var copyId = randomId();
     copy.setAttribute('id', `${copyId}`);
-    console.log(copy);
+    //console.log(copy);
     copy.children[3].setAttribute("onclick", `copy('${copyId}')`);
     copy.children[0].children[0].removeAttribute("disabled");
 
@@ -71,18 +120,7 @@ function copy(blankId) {
 
 
 
-var highlighter;
 
-rangy.init();
-highlighter = rangy.createHighlighter();
-highlighter.addClassApplier(rangy.createClassApplier('highlight'));
-
-function highlight() {
-    highlighter.highlightSelection('highlight');
-    var selTxt = rangy.getSelection();
-    console.log('selTxt: ' + selTxt);
-    //   rangy.getSelection().removeAllRanges();
-}
 
 function removeHighlights() {
     highlighter.removeAllHighlights();
