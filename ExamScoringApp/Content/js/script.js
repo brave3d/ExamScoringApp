@@ -9,6 +9,7 @@ function onMouseDown() {
         shareBox.remove();
 }
 
+var firstSelection = true;
 function onMouseUp() {
     var sel = document.getSelection(),
         txt = sel.toString();
@@ -26,7 +27,10 @@ function onMouseUp() {
             var shareBtn = shareBox.querySelector('button');
             shareBtn['shareTxt'] = txt;
             console.log(txt);
-
+            if (document.location.pathname.indexOf('Edit') > 0 && firstSelection) {
+                reset();
+                firstSelection = false;
+            }
             shareBtn.addEventListener('mousedown', makeBlank, true);
         }
     }
@@ -133,9 +137,6 @@ function reset() {
     $('#question').html($('#Text').val());
 }
 // document.getElementById('reset').addEventListener('click', removeHighlights);
-
-
-
 
 $("#Text").on('input', (e) => {
     $('#question').html(e.target.value);

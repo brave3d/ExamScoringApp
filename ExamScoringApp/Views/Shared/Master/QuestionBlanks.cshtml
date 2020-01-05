@@ -2,36 +2,34 @@
 @using ExamScoringApp.Models
 @model ExamScoringApp.Models.Question
 @using ExamScoringApp.Helpers
+@{ int l = 1;}
 
-    <div id="displayBlanks">
-            <table id="table" class="table table-bordered custom-table">
-
-
-                @{ int l = 1;}
+<div id="displayBlanks">
+    <table id="table" class="table table-bordered custom-table">
 
 
-                @foreach (var blank in Model.Blanks)
-                {
+        @foreach (var blank in Model.Blanks)
+        {
 
-                        foreach (var pa in blank.PossibleAnswers)
-                        {
+            foreach (var pa in blank.PossibleAnswers)
+            {
 
-                            <tr>
-                                <td style="width:80%">
+                <tr>
+                    <td style="width:80%">
 
-                                    <b>@pa.AnswerTxt</b>
-                                </td>
+                        <b>@pa.AnswerTxt</b>
+                    </td>
 
-                                <td  style="width:20%">
-                                    <b>@pa.Score</b>
+                    <td style="width:20%">
+                        <b>@pa.Score</b>
 
-                                </td>
+                    </td>
 
-                            </tr>
-                        }
-                }
-            </table>
-    </div>
+                </tr>
+            }
+        }
+    </table>
+</div>
 
 
-   
+

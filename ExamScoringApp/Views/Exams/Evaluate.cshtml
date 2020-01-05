@@ -117,7 +117,10 @@
                                                 <th>
                                                     Grade
                                                 </th>
-                                                <th style="width: 40%;"> </th>
+                                                <th>
+                                                    Answered questions
+                                                </th>
+                                                <th style="width: 30%;"> </th>
                                             </tr>
                                         </thead>
 
@@ -141,6 +144,11 @@
 
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Grade)
+                                        </td>
+
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.AnsweredQuestions)
                                         </td>
                                         <td>
 
